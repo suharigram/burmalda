@@ -11,6 +11,7 @@
     "dev:client": "vite --host 0.0.0.0",
     "dev:server": "node --watch server/index.mjs",
     "build": "vite build",
+    "db:migrate": "node server/migrate.mjs",
     "start": "NODE_ENV=production node server/index.mjs",
     "preview": "vite preview --host 0.0.0.0"
   },
@@ -19,6 +20,7 @@
     "@react-three/fiber": "^9.8.2",
     "lucide-react": "0.468.0",
     "nodemailer": "^10.3.1",
+    "pg": "^8.23.1",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "three": "^0.187.0"

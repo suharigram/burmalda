@@ -49,7 +49,7 @@ async function providerUser(provider, tokens) {
   return { id: String(profile.id), email, name: profile.name || profile.login, avatar: profile.avatar_url, verified: Boolean(email) };
 }
 
-export function sessionUser(request) {
+export async function sessionUser(request) {
   return getSessionUser(cookies(request).gc_session);
 }
 
@@ -57,9 +57,9 @@ export async function authApi(request, response, url, helpers) {
   const { json, body, publicUrl, production, text } = helpers;
   const path = url.pathname;
   if (request.method === 'GET' && path === '/api/auth/providers') return json(response, 200, { providers: Object.keys(providers).filter(configured) });
-  if (request.method === 'GET' && path === '/api/auth/me') return json(response, 200, { user: sessionUser(request) });
+  if (request.method === 'GET' && path === '/api/auth/me') return json(response, 200, { user: await sessionUser(request) });
   if (request.method === 'POST' && path === '/api/auth/logout') {
-    deleteSession(cookies(request).gc_session);
+    await deleteSession(cookies(request).gc_session);
     response.setHeader('Set-Cookie', cookie('gc_session', '', production, 0));
     return json(response, 200, { ok: true });
   }
@@ -90,25 +90,25 @@ export async function authApi(request, response, url, helpers) {
     if (!identity.email || !identity.verified) return redirect(response, `${publicUrl}/#/login?error=email`);
     const suppliedName = provider === 'apple' && input.user ? JSON.parse(input.user).name : null;
     const id = `${provider}:${identity.id}`;
-    const previous = getUser(id);
+    const previous = await getUser(id);
     const user = { id, email: identity.email.toLowerCase(), name: text(suppliedName ? `${suppliedName.firstName || ''} ${suppliedName.lastName || ''}` : identity.name, 120) || identity.email.split('@')[0], company: '', phone: '', location: '', ...previous, avatar: identity.avatar || previous?.avatar || '', provider };
-    saveUser(user);
+    await saveUser(user);
     const sessionId = randomUUID() + randomBytes(24).toString('hex');
-    createSession(sessionId, user.id, Date.now() + 7 * 86400000);
+    await createSession(sessionId, user.id, Date.now() + 7 * 86400000);
     response.setHeader('Set-Cookie', [cookie('gc_session', sessionId, production, 604800), cookie('gc_oauth_state', '', production, 0)]);
     return redirect(response, `${publicUrl}/#/account`);
   }
-  const user = sessionUser(request);
+  const user = await sessionUser(request);
   if (!user) return json(response, 401, { message: 'Sign in to access your account.' });
   if (path === '/api/account/profile' && request.method === 'PATCH') {
     const input = JSON.parse((await body(request)).toString() || '{}');
     const updated = { ...user, name: text(input.name, 120), company: text(input.company, 160), phone: text(input.phone, 40), location: text(input.location, 120), updatedAt: new Date().toISOString() };
     if (!updated.name) return json(response, 400, { message: 'Name is required.' });
-    saveUser(updated);
+    await saveUser(updated);
     return json(response, 200, { user: updated });
   }
   if (path === '/api/account/orders' && request.method === 'GET') {
-    return json(response, 200, { orders: listOrders(user.id) });
+    return json(response, 200, { orders: await listOrders(user.id) });
   }
   if (path === '/api/account/downloads' && request.method === 'GET') {
     const downloads = [
