@@ -4,7 +4,7 @@ React/Vite website with a Node.js API for inquiries, newsletter subscriptions, o
 
 ## Run locally
 
-Use Node.js 22 or newer, install dependencies, configure server-only secrets in `.env`, and start both development servers:
+Use Node.js 22.13 or newer, install dependencies, configure server-only secrets in `.env`, and start both development servers:
 
 ```bash
 npm install
@@ -14,7 +14,7 @@ npm run dev
 - Website: `http://localhost:5173`
 - API: `http://localhost:4173/api/health`
 
-In development, valid inquiries and orders are stored in `data/submissions.ndjson` even when email is not configured. This directory is intentionally excluded from version control. In production, inquiry/invoice requests return a configuration error instead of pretending delivery succeeded.
+Users, sessions, orders, inquiries, and newsletter subscriptions are stored in SQLite at `data/gonidoncloud.db`. The database is created automatically. Existing `data/submissions.ndjson` records are imported once on startup; the legacy file is kept unchanged as a backup. The entire `data/` directory is excluded from version control. In production, inquiry/invoice requests return a configuration error instead of pretending delivery succeeded.
 
 ## Production
 
@@ -39,10 +39,24 @@ Required public configuration:
 | `FORM_WEBHOOK_URL` | Optional additional inquiry delivery to a CRM or automation webhook. |
 | `STRIPE_SECRET_KEY` | Server-only Stripe secret key; use test keys until the full payment flow is verified. |
 | `STRIPE_WEBHOOK_SECRET` | Signing secret for the production Stripe webhook endpoint. |
+| `DATABASE_PATH` | Optional SQLite filename. Set to `/data/gonidoncloud.db` when the volume is mounted at `/data`. |
 
 Terminate HTTPS at the hosting provider or reverse proxy and redirect HTTP to HTTPS. Production responses include HSTS and baseline security headers. Keep `.env`, API keys, and OAuth secrets in the host's secret manager; never expose them through `VITE_` variables or commit them.
 
-Mount a persistent volume at `data/` and back it up. The included NDJSON store and in-memory OAuth sessions are a single-process foundation: restarts sign users out, and multiple replicas are not supported. Before opening accounts broadly or scaling, migrate users, orders, and sessions to a managed database and shared persistent session store, with encryption, retention/deletion policies, access logging, and tested backups.
+## Database and persistent volume
+
+SQLite uses WAL mode, foreign keys, indexes, and file permissions restricted to the application user. Users, persistent login sessions, orders, order events, and form submissions survive deployments and process restarts. No separate database server or additional npm package is required.
+
+To attach a persistent volume on **Render**:
+
+1. Open the web service, then **Disks** → **Add Disk**.
+2. Set **Mount Path** to `/data` and choose a size; 1 GB is enough to start.
+3. Add the environment variable `DATABASE_PATH=/data/gonidoncloud.db`.
+4. Redeploy and confirm that `GET /api/health` returns `"database":"sqlite"`.
+
+On **Railway**, add a **Volume** to the same web service, set its mount path to `/data`, add the same `DATABASE_PATH` variable, and redeploy. On a VPS, use any persistent directory owned by the application user and set `DATABASE_PATH` to a filename inside it.
+
+A SQLite volume must be attached to **one application instance only**. Do not run multiple replicas against the same SQLite file. Move to managed PostgreSQL when horizontal scaling or multiple application instances are needed. Enable volume snapshots or another consistent backup mechanism and test restoring a backup before accepting customer orders.
 
 ## Form delivery
 
@@ -54,7 +68,7 @@ Mount a persistent volume at `data/` and back it up. The included NDJSON store a
 
 `POST /api/newsletter` validates and stores subscriptions for export or synchronization with an email platform.
 
-For a real deployment, use a managed database with encryption, retention/deletion policies, access logging, and backups instead of the included development NDJSON store.
+Apply appropriate encryption, retention/deletion policies, access logging, and backups to customer data. Volume snapshots and application-file permissions protect stored data; HTTPS protects it in transit.
 
 ## Payments
 
@@ -68,15 +82,15 @@ Before accepting real payments, configure the legal seller entity, Stripe accoun
 
 ## Accounts and downloads
 
-The account area supports Google, Apple, and GitHub OAuth, editable profiles, order history, fulfillment status, and driver downloads. Configure the provider credentials shown in `.env.example` and register these exact callback URLs:
+The account area supports Google, Apple, and GitHub OAuth, editable profiles, order history, fulfillment status, and driver downloads. Configure `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET`, `APPLE_CLIENT_ID` with Apple credentials, and `GITHUB_CLIENT_ID`/`GITHUB_CLIENT_SECRET` in the server environment. Register these exact callback URLs:
 
 - `PUBLIC_URL/api/auth/google/callback`
 - `PUBLIC_URL/api/auth/apple/callback`
 - `PUBLIC_URL/api/auth/github/callback`
 
-Apple requires `form_post` callback support, which the server provides. OAuth sessions use HTTP-only, SameSite cookies; production sessions also require HTTPS. The included in-memory session store is suitable for a single-server deployment only. Use shared, persistent sessions and a managed user database before scaling to multiple instances.
+Apple requires `form_post` callback support, which the server provides. OAuth sessions use HTTP-only, SameSite cookies; production sessions also require HTTPS. Sessions are stored in SQLite for seven days and survive application restarts.
 
-Authenticated checkouts are linked to the account automatically. Stripe webhooks continue to confirm payment status. Fulfillment integrations can append `order_update` records with `processing`, `shipped`, or `delivered`, plus optional `carrier` and `trackingNumber` fields. Configure the signed driver URLs in `.env.example`; unpublished packages are never presented as downloadable files.
+Authenticated checkouts are linked to the account automatically. Stripe webhooks confirm payment status without duplicating customer notifications on retries. Fulfillment integrations can call `updateOrder` from `server/database.js` with `processing`, `shipped`, or `delivered`, plus optional `carrier` and `trackingNumber` fields. Configure signed driver URLs with `FPU_LINUX_DRIVER_URL`, `FPU_FIRMWARE_URL`, and `FPU_SDK_URL`; unpublished packages are never presented as downloadable files.
 
 ## Legal content
 

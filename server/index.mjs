@@ -1,26 +1,26 @@
 import http from 'node:http';
 import { createHmac, randomUUID, timingSafeEqual } from 'node:crypto';
-import { appendFile, mkdir, readFile, stat } from 'node:fs/promises';
+import { readFile, stat } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import nodemailer from 'nodemailer';
 import { getCatalogItem } from '../src/commerceData.js';
 import { authApi, sessionUser } from './auth.js';
+import { closeDatabase, createOrder, createSubmission, databaseHealthy, getOrder, initializeDatabase, updateOrder } from './database.js';
 
 if (existsSync('.env') && typeof process.loadEnvFile === 'function') process.loadEnvFile('.env');
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(root, 'dist');
-const dataDir = path.join(root, 'data');
-const storeFile = path.join(dataDir, 'submissions.ndjson');
 const port = Number(process.env.PORT || 4173);
 const production = process.env.NODE_ENV === 'production';
 const trustProxy = process.env.TRUST_PROXY === 'true';
 const publicUrl = (process.env.PUBLIC_URL || `http://localhost:${process.env.PUBLIC_PORT || 5173}`).replace(/\/$/, '');
 const attempts = new Map();
-let writeQueue = Promise.resolve();
 let transporter;
+
+initializeDatabase();
 
 const json = (response, status, payload) => {
   response.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
@@ -49,14 +49,6 @@ async function body(request, limit = 65536) {
     chunks.push(chunk);
   }
   return Buffer.concat(chunks);
-}
-
-async function persist(type, payload) {
-  const record = { type, id: randomUUID(), createdAt: new Date().toISOString(), ...payload };
-  await mkdir(dataDir, { recursive: true });
-  writeQueue = writeQueue.then(() => appendFile(storeFile, `${JSON.stringify(record)}\n`, { mode: 0o600 }));
-  await writeQueue;
-  return record;
 }
 
 function mailTransport() {
@@ -113,16 +105,6 @@ function customerPayload(input = {}) {
   return value;
 }
 
-async function orderStatus(orderId) {
-  try {
-    const lines = (await readFile(storeFile, 'utf8')).split('\n').filter(Boolean);
-    const records = lines.map((line) => { try { return JSON.parse(line); } catch { return null; } }).filter((record) => record?.orderId === orderId);
-    const order = records.find((record) => record.type === 'order');
-    if (!order) return null;
-    return records.reduce((current, record) => ({ ...current, ...record, id: order.id, orderId, reference: order.reference, total: order.total, currency: order.currency }), { status: order.status });
-  } catch { return null; }
-}
-
 function verifyStripe(raw, signature) {
   if (!process.env.STRIPE_WEBHOOK_SECRET || !signature) return false;
   const parts = Object.fromEntries(signature.split(',').map((part) => part.split('=')));
@@ -151,10 +133,10 @@ async function createStripeSession(order, item, quantity, customer) {
 }
 
 async function api(request, response, url) {
-  if (url.pathname.startsWith('/api/auth/') || url.pathname.startsWith('/api/account/')) return authApi(request, response, url, { json, body, persist, publicUrl, production, text, storeFile });
-  if (request.method === 'GET' && url.pathname === '/api/health') return json(response, 200, { ok: true, emailDelivery: deliveryConfigured(), cardPayments: Boolean(process.env.STRIPE_SECRET_KEY) });
+  if (url.pathname.startsWith('/api/auth/') || url.pathname.startsWith('/api/account/')) return authApi(request, response, url, { json, body, publicUrl, production, text });
+  if (request.method === 'GET' && url.pathname === '/api/health') return json(response, 200, { ok: databaseHealthy(), database: 'sqlite', emailDelivery: deliveryConfigured(), cardPayments: Boolean(process.env.STRIPE_SECRET_KEY) });
   if (request.method === 'GET' && url.pathname.startsWith('/api/orders/')) {
-    const order = await orderStatus(decodeURIComponent(url.pathname.slice('/api/orders/'.length)));
+    const order = getOrder(decodeURIComponent(url.pathname.slice('/api/orders/'.length)));
     if (!order) return json(response, 404, { message: 'Order not found.' });
     return json(response, 200, { orderId: order.orderId, reference: order.reference, status: order.status, total: order.total, currency: order.currency });
   }
@@ -165,10 +147,11 @@ async function api(request, response, url) {
     if (event.type === 'checkout.session.completed' || event.type === 'checkout.session.async_payment_succeeded') {
       const session = event.data.object;
       const orderId = session.metadata?.orderId;
+      const order = getOrder(orderId);
       const paymentConfirmed = event.type === 'checkout.session.async_payment_succeeded' || session.payment_status === 'paid';
-      if (orderId && paymentConfirmed) {
-        await persist('payment', { orderId, status: 'paid', stripeSessionId: session.id, paymentStatus: session.payment_status });
-        await deliver(`Paid pre-order ${orderId}`, `Stripe Checkout completed.\nPre-order: ${orderId}\nSession: ${session.id}\nAmount: ${session.amount_total} ${session.currency}`, session.customer_email);
+      if (order && paymentConfirmed) {
+        updateOrder(orderId, { status: 'paid', stripeSessionId: session.id, paymentStatus: session.payment_status, eventType: 'payment' });
+        if (order.status !== 'paid') await deliver(`Paid pre-order ${orderId}`, `Stripe Checkout completed.\nPre-order: ${orderId}\nSession: ${session.id}\nAmount: ${session.amount_total} ${session.currency}`, session.customer_email);
       }
     }
     return json(response, 200, { received: true });
@@ -183,14 +166,14 @@ async function api(request, response, url) {
     if (!inquiry) return json(response, 400, { message: 'Please check the required fields and work email.' });
     if (production && !deliveryConfigured()) return json(response, 503, { message: 'Form delivery is not configured. Please email sales@gonidoncloud.com.' });
     const requestId = reference('GC');
-    await persist('inquiry', { requestId, ...inquiry });
+    createSubmission('inquiry', { requestId, ...inquiry });
     await deliver(`GonidonCloud inquiry ${requestId}`, `Reference: ${requestId}\nName: ${inquiry.firstName} ${inquiry.lastName}\nEmail: ${inquiry.email}\nCompany: ${inquiry.company}\nInterest: ${inquiry.interest}\n\n${inquiry.message}`, inquiry.email, inquiry.email);
     return json(response, 201, { ok: true, requestId });
   }
   if (url.pathname === '/api/newsletter') {
     const email = text(input.email, 254);
     if (!validEmail(email)) return json(response, 400, { message: 'Enter a valid work email.' });
-    await persist('newsletter', { email, source: 'website-footer' });
+    createSubmission('newsletter', { email, source: 'website-footer' });
     return json(response, 201, { ok: true });
   }
   if (url.pathname === '/api/checkout') {
@@ -201,7 +184,7 @@ async function api(request, response, url) {
     if (customer.paymentMethod === 'invoice' && production && !deliveryConfigured()) return json(response, 503, { message: 'Invoice delivery is not configured. Please contact orders@gonidoncloud.com.' });
     const orderId = randomUUID(); const orderReference = reference('GC-ORD');
     const order = { orderId, reference: orderReference, productId: item.id, productName: item.name, quantity, total: item.unitAmount * quantity, currency: item.currency, status: customer.paymentMethod === 'invoice' ? 'awaiting_invoice' : 'pending_payment', customer, userId: sessionUser(request)?.id || null };
-    await persist('order', order);
+    createOrder(order);
     if (customer.paymentMethod === 'invoice') {
       await deliver(`Pre-order invoice ${orderReference}`, JSON.stringify(order, null, 2), customer.email, customer.email);
       return json(response, 201, { ok: true, orderId, reference: orderReference, status: 'awaiting_invoice' });
@@ -209,11 +192,11 @@ async function api(request, response, url) {
     if (!process.env.STRIPE_SECRET_KEY) return json(response, 503, { message: 'Card payments are not configured in this environment. Choose a pro forma invoice or contact sales.' });
     try {
       const session = await createStripeSession(order, item, quantity, customer);
-      await persist('order_update', { orderId, status: 'checkout_created', stripeSessionId: session.id });
+      updateOrder(orderId, { status: 'checkout_created', stripeSessionId: session.id });
       return json(response, 201, { checkoutUrl: session.url, orderId });
     } catch (error) {
       console.error('Stripe Checkout failed:', error.message);
-      await persist('order_update', { orderId, status: 'checkout_failed' });
+      updateOrder(orderId, { status: 'checkout_failed' });
       return json(response, 502, { message: 'Secure card checkout is temporarily unavailable. Choose a pro forma invoice or try again later.' });
     }
   }
@@ -251,3 +234,6 @@ const server = http.createServer(async (request, response) => {
   }
 });
 server.listen(port, '0.0.0.0', () => console.log(`GonidonCloud server listening on http://localhost:${port} (${production ? 'production' : 'development'})`));
+const shutdown = () => server.close(() => { closeDatabase(); process.exit(0); });
+process.once('SIGTERM', shutdown);
+process.once('SIGINT', shutdown);

@@ -1,7 +1,6 @@
 import { createPrivateKey, randomBytes, randomUUID, sign } from 'node:crypto';
-import { readFile } from 'node:fs/promises';
+import { createSession, deleteSession, getSessionUser, getUser, listOrders, saveUser } from './database.js';
 
-const sessions = new Map();
 const oauthStates = new Map();
 const providers = {
   google: {
@@ -51,19 +50,16 @@ async function providerUser(provider, tokens) {
 }
 
 export function sessionUser(request) {
-  const id = cookies(request).gc_session;
-  const session = id && sessions.get(id);
-  if (!session || session.expires < Date.now()) { if (id) sessions.delete(id); return null; }
-  return session.user;
+  return getSessionUser(cookies(request).gc_session);
 }
 
 export async function authApi(request, response, url, helpers) {
-  const { json, body, persist, publicUrl, production, text } = helpers;
+  const { json, body, publicUrl, production, text } = helpers;
   const path = url.pathname;
   if (request.method === 'GET' && path === '/api/auth/providers') return json(response, 200, { providers: Object.keys(providers).filter(configured) });
   if (request.method === 'GET' && path === '/api/auth/me') return json(response, 200, { user: sessionUser(request) });
   if (request.method === 'POST' && path === '/api/auth/logout') {
-    sessions.delete(cookies(request).gc_session);
+    deleteSession(cookies(request).gc_session);
     response.setHeader('Set-Cookie', cookie('gc_session', '', production, 0));
     return json(response, 200, { ok: true });
   }
@@ -94,12 +90,11 @@ export async function authApi(request, response, url, helpers) {
     if (!identity.email || !identity.verified) return redirect(response, `${publicUrl}/#/login?error=email`);
     const suppliedName = provider === 'apple' && input.user ? JSON.parse(input.user).name : null;
     const id = `${provider}:${identity.id}`;
-    const records = (await readFile(helpers.storeFile, 'utf8').catch(() => '')).split('\n').filter(Boolean).map((line) => { try { return JSON.parse(line); } catch { return null; } }).filter(Boolean);
-    const previous = records.filter((record) => record.id === id && (record.type === 'account' || record.type === 'profile')).at(-1);
+    const previous = getUser(id);
     const user = { id, email: identity.email.toLowerCase(), name: text(suppliedName ? `${suppliedName.firstName || ''} ${suppliedName.lastName || ''}` : identity.name, 120) || identity.email.split('@')[0], company: '', phone: '', location: '', ...previous, avatar: identity.avatar || previous?.avatar || '', provider };
-    await persist('account', user);
+    saveUser(user);
     const sessionId = randomUUID() + randomBytes(24).toString('hex');
-    sessions.set(sessionId, { user, expires: Date.now() + 7 * 86400000 });
+    createSession(sessionId, user.id, Date.now() + 7 * 86400000);
     response.setHeader('Set-Cookie', [cookie('gc_session', sessionId, production, 604800), cookie('gc_oauth_state', '', production, 0)]);
     return redirect(response, `${publicUrl}/#/account`);
   }
@@ -109,17 +104,11 @@ export async function authApi(request, response, url, helpers) {
     const input = JSON.parse((await body(request)).toString() || '{}');
     const updated = { ...user, name: text(input.name, 120), company: text(input.company, 160), phone: text(input.phone, 40), location: text(input.location, 120), updatedAt: new Date().toISOString() };
     if (!updated.name) return json(response, 400, { message: 'Name is required.' });
-    const session = sessions.get(cookies(request).gc_session); session.user = updated;
-    await persist('profile', updated);
+    saveUser(updated);
     return json(response, 200, { user: updated });
   }
   if (path === '/api/account/orders' && request.method === 'GET') {
-    const records = (await readFile(helpers.storeFile, 'utf8').catch(() => '')).split('\n').filter(Boolean).map((line) => { try { return JSON.parse(line); } catch { return null; } }).filter(Boolean);
-    const orders = records.filter((record) => record.type === 'order' && record.userId === user.id).map((order) => {
-      const current = records.filter((record) => record.orderId === order.orderId).reduce((value, record) => ({ ...value, ...record }), order);
-      return { orderId: order.orderId, reference: order.reference, productName: order.productName, quantity: order.quantity, total: order.total, currency: order.currency, status: current.status, createdAt: order.createdAt, trackingNumber: current.trackingNumber || '', carrier: current.carrier || '' };
-    }).reverse();
-    return json(response, 200, { orders });
+    return json(response, 200, { orders: listOrders(user.id) });
   }
   if (path === '/api/account/downloads' && request.method === 'GET') {
     const downloads = [
