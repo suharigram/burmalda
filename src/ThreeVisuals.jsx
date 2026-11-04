@@ -27,7 +27,7 @@ function Chip({ type = 'processor' }) {
       <mesh castShadow><boxGeometry args={isAccelerator ? [2.7, 0.35, 4.1] : [4.2, 0.32, 4.2]} /><meshStandardMaterial color="#17181d" metalness={0.9} roughness={0.22} /></mesh>
       <mesh position={[0, 0.25, 0]} castShadow><boxGeometry args={isAccelerator ? [2.35, 0.24, 3.7] : [3.75, 0.22, 3.75]} /><meshStandardMaterial color="#a5a8b0" metalness={0.95} roughness={0.18} /></mesh>
       <mesh position={[0, 0.43, 0]}><boxGeometry args={isAccelerator ? [1.65, 0.18, 2.55] : [2.25, 0.2, 2.25]} /><meshStandardMaterial color="#111217" metalness={0.8} roughness={0.2} /></mesh>
-      <mesh position={[0, 0.54, 0]}><boxGeometry args={[0.72, 0.035, 0.72]} /><meshStandardMaterial color="#e51c23" emissive="#e51c23" emissiveIntensity={1.4} /></mesh>
+      <mesh position={[0, 0.54, 0]}><boxGeometry args={[0.72, 0.035, 0.72]} /><meshStandardMaterial color="#f4d90b" emissive="#f4d90b" emissiveIntensity={1.4} /></mesh>
       {Array.from({ length: 7 }, (_, index) => {
         const offset = -1.5 + index * 0.5;
         return <group key={offset}>
@@ -36,7 +36,7 @@ function Chip({ type = 'processor' }) {
         </group>;
       })}
     </group>}
-    <pointLight position={[0, 0, 2]} color="#e51c23" intensity={12} distance={7} />
+    <pointLight position={[0, 0, 2]} color="#f4d90b" intensity={12} distance={7} />
   </group>;
 }
 
@@ -44,7 +44,7 @@ function Orbit({ radius = 3.2, speed = 0.15 }) {
   const ring = useRef();
   useFrame((_, delta) => { if (ring.current && !reducedMotion()) ring.current.rotation.z += delta * speed; });
   return <group ref={ring} rotation={[1.15, 0.2, 0]}>
-    <mesh><torusGeometry args={[radius, 0.009, 8, 128]} /><meshBasicMaterial color="#e51c23" transparent opacity={0.45} /></mesh>
+    <mesh><torusGeometry args={[radius, 0.009, 8, 128]} /><meshBasicMaterial color="#f4d90b" transparent opacity={0.45} /></mesh>
     <mesh position={[radius, 0, 0]}><sphereGeometry args={[0.065, 16, 16]} /><meshBasicMaterial color="#ff4b52" /></mesh>
   </group>;
 }
@@ -61,7 +61,7 @@ export function ProductScene({ type = 'processor', className = '' }) {
     {visible && <Canvas camera={{ position: [0, 1.2, 8], fov: 40 }} dpr={[1, 1.6]} gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }} shadows>
       <ambientLight intensity={1.2} />
       <directionalLight position={[4, 6, 5]} intensity={4} color="#ffffff" castShadow />
-      <directionalLight position={[-5, 0, 2]} intensity={3} color="#e51c23" />
+      <directionalLight position={[-5, 0, 2]} intensity={3} color="#f4d90b" />
       <Chip type={type} />
       <Orbit /><Orbit radius={3.65} speed={-0.1} />
     </Canvas>}
@@ -78,8 +78,8 @@ function Network() {
   }, [points]);
   useFrame((state) => { if (group.current && !reducedMotion()) group.current.rotation.z = state.clock.elapsedTime * 0.012; });
   return <group ref={group}>
-    <lineSegments geometry={lineGeometry}><lineBasicMaterial color="#e51c23" transparent opacity={0.13} /></lineSegments>
-    {points.map((point, index) => <mesh key={index} position={point}><sphereGeometry args={[index % 5 === 0 ? 0.045 : 0.022, 8, 8]} /><meshBasicMaterial color={index % 5 === 0 ? '#e51c23' : '#777b86'} transparent opacity={0.5} /></mesh>)}
+    <lineSegments geometry={lineGeometry}><lineBasicMaterial color="#f4d90b" transparent opacity={0.13} /></lineSegments>
+    {points.map((point, index) => <mesh key={index} position={point}><sphereGeometry args={[index % 5 === 0 ? 0.045 : 0.022, 8, 8]} /><meshBasicMaterial color={index % 5 === 0 ? '#f4d90b' : '#777b86'} transparent opacity={0.5} /></mesh>)}
   </group>;
 }
 

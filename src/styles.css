@@ -89,9 +89,6 @@ svg { flex-shrink: 0; }
 .mega-menu__tabs button.active svg { opacity: 1; }
 .mega-menu__columns { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; }
 .mega-menu__content--sidebar .mega-menu__columns { grid-template-columns: 1fr; }
-.mega-menu__enterprise { margin-top: 20px; padding-top: 18px; border-top: 1px solid #e4e4e6; }
-.mega-menu__enterprise h3 { color: var(--red); }
-html[data-theme='dark'] .mega-menu__enterprise { border-color: #303137; }
 .mega-menu__column h3 { margin: 0 0 16px; color: #8a8c92; font-family: inherit; font-size: 10px; letter-spacing: 1.3px; text-transform: uppercase; }
 .mega-menu__column :is(button, a) { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 9px 0; border: 0; background: none; text-align: left; font-size: 13px; }
 .mega-menu__column :is(button, a) svg { opacity: 0; transition: opacity .2s; }

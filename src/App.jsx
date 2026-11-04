@@ -29,11 +29,20 @@ const navigation = [
     label: 'Products',
     sidebar: true,
     columns: [
-      { title: 'Compute', links: ['FPU Apollon 1100 Server Processors', 'FPU 1100 AI Accelerators', 'FPU Force 1100 Server GPUs'], enterpriseLinks: ['FPU Apollon 1100 Enterprise', 'FPU 1100 Enterprise', 'FPU Force 1100 Enterprise'] },
-      { title: 'Systems', links: ['FlowForce W 1100 Workstation', 'FlowForce E 1100 Edge System', 'FlowSystem R 1100 Enterprise Servers'], enterpriseLinks: ['FlowForce W 1100 Enterprise', 'FlowForce E 1100 Enterprise', 'FlowSystem R 1100 Enterprise'] },
+      { title: 'Compute', links: ['FPU Apollon 1100 Server Processors', 'FPU 1100 AI Accelerators', 'FPU Force 1100 Server GPUs'] },
+      { title: 'Systems', links: ['FlowForce W 1100 Workstation', 'FlowForce E 1100 Edge System', 'FlowSystem R 1100 Enterprise Servers'] },
       { title: 'Software & Tools', links: ['Cloud Platform', 'Developer Hub', 'Documentation', 'Drivers & Downloads'] },
     ],
     feature: { eyebrow: 'PRE-ORDER', title: 'FPU Apollon 1100', text: 'Our most advanced server processor yet.', target: '/products/fpu-apollon-1100' },
+  },
+  {
+    label: 'Enterprise',
+    sidebar: true,
+    columns: [
+      { title: 'Compute Enterprise', links: ['FPU Apollon 1100 Enterprise', 'FPU 1100 Enterprise', 'FPU Force 1100 Enterprise'] },
+      { title: 'Systems Enterprise', links: ['FlowForce W 1100 Enterprise', 'FlowForce E 1100 Enterprise', 'FlowSystem R 1100 Enterprise'] },
+    ],
+    feature: { eyebrow: 'ENTERPRISE', title: 'Built around your deployment.', text: 'Validated configurations, volume procurement, and dedicated engineering support.', target: '/enterprise/flowsystem-r-1100' },
   },
   {
     label: 'Solutions',
@@ -161,8 +170,8 @@ function Header({ onSearch, onContact, theme, onToggleTheme, user }) {
       {announcement && (
         <div className="announcement">
           <div className="container announcement__inner">
-            <span><strong>FPU Apollon 1100 PRE-ORDERS OPEN</strong><span className="announcement__divider" /><span className="announcement__message">Reserve our flagship processor now. First shipments Q1 2027.</span></span>
-            <a href="#/products/fpu-apollon-1100">Discover FPU Apollon 1100 <ArrowRight size={14} /></a>
+            <span><strong>FPU Apollon 1100 pre-orders are open</strong><span className="announcement__divider" /><span className="announcement__message">Reserve our flagship processor. First shipments Q1 2027.</span></span>
+            <a className="announcement__cta" href="#/products/fpu-apollon-1100">Pre-order <ArrowUpRight size={13} /></a>
             <button className="announcement__close" onClick={() => setAnnouncement(false)} aria-label="Dismiss announcement"><X size={15} /></button>
           </div>
         </div>
@@ -170,6 +179,7 @@ function Header({ onSearch, onContact, theme, onToggleTheme, user }) {
       <header className="site-header" ref={headerRef}>
         <div className="container header__inner">
           <a href="#/" className="header__brand" aria-label="GonidonCloud home" onClick={closeMenus}><Brand /></a>
+          <a className="header__github" href="https://github.com/gonidoncloud" target="_blank" rel="noreferrer"><Github size={16} /> Open source</a>
           <nav className="desktop-nav" aria-label="Main navigation">
             {navigation.map((item) => (
               <button key={item.label} className={activeMenu === item.label ? 'active' : ''} onClick={() => { setActiveMenu(activeMenu === item.label ? null : item.label); setActiveProductTab(item.columns[0].title); }} aria-expanded={activeMenu === item.label}>
@@ -178,13 +188,10 @@ function Header({ onSearch, onContact, theme, onToggleTheme, user }) {
             ))}
           </nav>
           <div className="header__actions">
-            <button className="icon-button theme-toggle" onClick={onToggleTheme} aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`} title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}>{theme === 'dark' ? <Sun size={19} /> : <Moon size={19} />}</button>
-            <a className="icon-button header__store" href="#/store" aria-label="GonidonCloud store" title="Store"><ShoppingBag size={19} /></a>
-            <a className="icon-button header__account" href={user ? '#/account' : '#/login'} aria-label={user ? 'My account' : 'Sign in'} title={user ? user.name : 'Sign in'}><UserRound size={20} /></a>
-            <button className="icon-button header__search" onClick={onSearch} aria-label="Search"><Search size={21} /></button>
-            <span className="header__rule" />
-            <div className="header__locale"><Globe2 size={18} /><span>EN</span></div>
-            <button className="button button--small button--dark header__contact" onClick={onContact}>Contact us</button>
+            <button className="header__search-link" onClick={onSearch}><Search size={16} /> Search</button>
+            <a className="header__signin" href={user ? '#/account' : '#/login'}>{user ? 'My account' : 'Sign in'}</a>
+            <button className="header__contact" onClick={onContact}>Contact sales</button>
+            <a className="header__get-started" href="#/store">Get Started <ArrowUpRight size={15} /></a>
             <button className="icon-button mobile-toggle" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle navigation" aria-expanded={mobileOpen}>{mobileOpen ? <X /> : <Menu />}</button>
           </div>
         </div>
@@ -203,7 +210,6 @@ function Header({ onSearch, onContact, theme, onToggleTheme, user }) {
                       <div className="mega-menu__column" key={column.title}>
                         {!item.sidebar && <h3>{column.title}</h3>}
                         {column.links.map((link) => link === 'Contact an Expert' ? <button key={link} onClick={() => { closeMenus(); onContact(); }}>{link}<ArrowUpRight size={14} /></button> : <a key={link} href={linkRoutes[link]?.startsWith('http') ? linkRoutes[link] : `#${linkRoutes[link]}`} target={linkRoutes[link]?.startsWith('http') ? '_blank' : undefined} rel={linkRoutes[link]?.startsWith('http') ? 'noreferrer' : undefined} onClick={closeMenus}>{link}<ArrowUpRight size={14} /></a>)}
-                        {column.enterpriseLinks && <div className="mega-menu__enterprise"><h3>Enterprise</h3>{column.enterpriseLinks.map((link) => <a key={link} href={`#${linkRoutes[link]}`} onClick={closeMenus}>{link}<ArrowUpRight size={14} /></a>)}</div>}
                       </div>
                     ))}
                   </div>
@@ -220,10 +226,14 @@ function Header({ onSearch, onContact, theme, onToggleTheme, user }) {
 
       <div className={`mobile-menu ${mobileOpen ? 'mobile-menu--open' : ''}`}>
         <div className="mobile-menu__links">
+          <div className="mobile-menu__utilities">
+            <button onClick={() => { closeMenus(); onSearch(); }}><Search size={16} /> Search</button>
+            <a href={user ? '#/account' : '#/login'} onClick={closeMenus}><UserRound size={16} /> {user ? 'My account' : 'Sign in'}</a>
+          </div>
           {navigation.map((item, index) => (
             <div className="mobile-menu__section" key={item.label}>
               <button onClick={() => setMobileSection(mobileSection === index ? null : index)} aria-expanded={mobileSection === index}>{item.label}<ChevronDown className={mobileSection === index ? 'rotated' : ''} /></button>
-              {mobileSection === index && <div className="mobile-menu__sub">{item.columns.flatMap((column) => [...column.links, ...(column.enterpriseLinks || [])]).map((link) => link === 'Contact an Expert' ? <button key={link} onClick={() => { closeMenus(); onContact(); }}>{link}</button> : <a key={link} href={linkRoutes[link]?.startsWith('http') ? linkRoutes[link] : `#${linkRoutes[link]}`} target={linkRoutes[link]?.startsWith('http') ? '_blank' : undefined} rel={linkRoutes[link]?.startsWith('http') ? 'noreferrer' : undefined} onClick={closeMenus}>{link}</a>)}</div>}
+              {mobileSection === index && <div className="mobile-menu__sub">{item.columns.flatMap((column) => column.links).map((link) => link === 'Contact an Expert' ? <button key={link} onClick={() => { closeMenus(); onContact(); }}>{link}</button> : <a key={link} href={linkRoutes[link]?.startsWith('http') ? linkRoutes[link] : `#${linkRoutes[link]}`} target={linkRoutes[link]?.startsWith('http') ? '_blank' : undefined} rel={linkRoutes[link]?.startsWith('http') ? 'noreferrer' : undefined} onClick={closeMenus}>{link}</a>)}</div>}
             </div>
           ))}
           <button className="mobile-menu__contact" onClick={() => { setMobileOpen(false); onContact(); }}>Talk to an engineer <ArrowRight size={17} /></button>
@@ -305,6 +315,23 @@ function ArchitectureModal({ onClose }) {
       <div className="architecture-grid"><div><Cpu /><h3>??? cores</h3><p>High-density FPU compute chiplets built for demanding, parallel workloads.</p></div><div><Database /><h3>??? memory channels</h3><p>High-bandwidth DDR5 memory keeps data moving to every core.</p></div><div><Layers3 /><h3>??? PCIe® lanes</h3><p>Flexible, high-speed connectivity for accelerators, storage, and networking.</p></div><div><ShieldCheck /><h3>Security at the core</h3><p>Hardware-rooted trust and memory encryption help protect critical data.</p></div></div>
       <a className="button button--red" href="#/products/fpu-apollon-1100" onClick={onClose}>Explore the platform <ArrowRight size={17} /></a>
     </Modal>
+  );
+}
+
+function ComputeConsole() {
+  return (
+    <div className="compute-console" aria-label="GonidonCloud platform console">
+      <div className="compute-console__bar"><div><span /><span /><span /></div><small>gonidoncloud / platform</small><span>⌘ K</span></div>
+      <div className="compute-console__body">
+        <div className="compute-console__command"><span>~</span><code>fpu status --cluster production</code><i>RUNNING</i></div>
+        <div className="compute-console__grid">
+          <div><small>HOST COMPUTE</small><strong>FPU Apollon 1100</strong><span><i /> Ready for pre-order</span></div>
+          <div><small>AI ACCELERATION</small><strong>FPU 1100</strong><span><i /> Open software stack</span></div>
+          <div><small>DEPLOYMENT</small><strong>FlowSystem R 1100</strong><span><i /> Q1 2027</span></div>
+        </div>
+        <div className="compute-console__output"><span>01</span><code>Silicon, systems, and software. One open platform.</code><strong>CONNECTED</strong></div>
+      </div>
+    </div>
   );
 }
 
@@ -434,18 +461,18 @@ function App() {
       <div className="site-progress" aria-hidden="true" />
       <div className="ambient-light" aria-hidden="true" />
       <Header onSearch={() => setSearchOpen(true)} onContact={() => setContactOpen(true)} theme={theme} onToggleTheme={() => setTheme((current) => current === 'dark' ? 'light' : 'dark')} user={user} />
-      {route === '/' ? <main>
+      {route === '/' ? <main className="home-page">
         <section className="hero" id="fpu1100">
           <div className="hero__grid" />
           <div className="container hero__inner">
             <div className="hero__content">
-              <div className="hero__eyebrow"><span /> INTRODUCING FPU Apollon 1100</div>
-              <h1>Compute without<br />limits<span>.</span></h1>
-              <p>Meet the server processor engineered to turn your biggest ambitions into what’s next.</p>
-              <div className="hero__buttons"><a className="button button--red" href="#/products/fpu-apollon-1100">Discover FPU Apollon 1100 <ArrowRight size={18} /></a><button className="button button--ghost" onClick={() => setArchitectureOpen(true)}>Explore the architecture <ArrowUpRight size={17} /></button></div>
+              <div className="hero__eyebrow"><span /> OPEN COMPUTE / BUILT FOR WHAT'S NEXT</div>
+              <h1>One open platform for every <br />compute workload<span>.</span></h1>
+              <p>Processors, AI accelerators, and complete systems. One coherent architecture everywhere you build, from the workstation to the data center.</p>
+              <div className="hero__buttons"><a className="button button--red" href="#/products/fpu-apollon-1100">Explore the platform <ArrowRight size={18} /></a><button className="button button--ghost" onClick={() => setArchitectureOpen(true)}>View architecture <ArrowUpRight size={17} /></button></div>
               <div className="hero__availability"><span className="status-dot" /> Pre-orders open now · first shipments Q1 2027</div>
             </div>
-            <HeroProcessor />
+            <ComputeConsole />
           </div>
           <div className="container hero__specs">
             <div><strong>???</strong><span>High-performance cores</span></div><div><strong>???</strong><span>DDR5 memory channels</span></div><div><strong>???</strong><span>PCIe® 5.0 lanes</span></div><div className="hero__specs-note"><Cpu size={27} strokeWidth={1.4} /><span>One platform.<br />Infinite possibilities.</span></div>
