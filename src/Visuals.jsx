@@ -1,21 +1,22 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 
-const ProductScene = lazy(() => import('./ThreeVisuals.jsx').then((module) => ({ default: module.ProductScene })));
-
-const currentTheme = () => document.documentElement.dataset.theme || 'light';
+const ProductScene = dynamic(() => import('./ThreeVisuals.jsx').then((module) => module.ProductScene), { ssr: false });
+const currentTheme = () => document.documentElement.dataset.theme || 'dark';
 
 export function Brand({ light = false }) {
-  const [theme, setTheme] = useState(currentTheme);
+  const [theme, setTheme] = useState('dark');
   useEffect(() => {
+    setTheme(currentTheme());
     const observer = new MutationObserver(() => setTheme(currentTheme()));
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
     return () => observer.disconnect();
   }, []);
   const inverted = light || theme === 'dark';
   return (
-    <span className={`brand ${light ? 'brand--light' : ''}`} aria-label="GonidonCloud">
+    <span className={`brand ${light ? 'brand--light' : ''}`} aria-label="Mindpick">
       <img className="brand__mark" src={inverted ? '/logo-white.png' : '/logo.png'} alt="" width="330" height="247" />
-      <span className="brand__word">Gonidon<span>Cloud</span></span>
+      <span className="brand__word">Mindpick</span>
     </span>
   );
 }

@@ -1650,6 +1650,113 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   background: #171710;
 }
 
+.login-tabs {
+  display: flex;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--kilo-line);
+}
+
+.login-tabs button {
+  flex: 1;
+  padding: 12px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  color: var(--kilo-muted);
+  background: transparent;
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.login-tabs button.active {
+  border-color: var(--kilo-yellow);
+  color: var(--kilo-yellow);
+}
+
+.login-form fieldset {
+  display: grid;
+  gap: 15px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.login-form fieldset:disabled {
+  opacity: .55;
+}
+
+.login-form label {
+  display: grid;
+  gap: 7px;
+  color: var(--kilo-muted);
+  font-size: 10px;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid var(--kilo-line);
+  border-radius: 0;
+  outline: 0;
+  color: var(--kilo-text);
+  background: #0e0e0c;
+  font: inherit;
+  font-size: 12px;
+}
+
+.login-form input:focus {
+  border-color: var(--kilo-yellow);
+}
+
+.login-submit {
+  justify-content: center;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.login-forgot {
+  display: block;
+  margin: 16px auto 0;
+  padding: 0;
+  border: 0;
+  color: var(--kilo-muted);
+  background: transparent;
+  font: inherit;
+  font-size: 10px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0 16px;
+  color: var(--kilo-dim);
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+.login-divider::before, .login-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--kilo-line);
+}
+
+.login-message {
+  margin-top: 16px;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.login-success {
+  padding: 13px;
+  border: 1px solid #315c40;
+  color: #a4d9b4;
+  background: #102217;
+}
+
 .account-avatar {
   border-radius: 0;
   background: var(--kilo-yellow);

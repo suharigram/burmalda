@@ -1,114 +1,102 @@
-# GonidonCloud
+# Mindpick
 
-React/Vite website with a Node.js API for inquiries, newsletter subscriptions, orders, and Stripe-hosted card checkout.
+Next.js website with serverless API routes for accounts, inquiries, orders, Stripe Checkout, and Supabase PostgreSQL.
+
+## Stack
+
+- Next.js App Router and React
+- Vercel hosting and serverless functions
+- Supabase PostgreSQL through the `pg` driver
+- Stripe hosted Checkout
+- Three.js product visuals
 
 ## Run locally
 
-Use Node.js 22.13 or newer and a running PostgreSQL server. Install dependencies, set `DATABASE_URL` and other server-only secrets in `.env`, then start both development servers:
+Use Node.js 22.13 or newer. Install dependencies, configure `.env`, and run the Supabase migration before starting the app:
 
 ```bash
 npm install
+npm run db:migrate
 npm run dev
 ```
 
-- Website: `http://localhost:5173`
-- API: `http://localhost:4173/api/health`
+Open `http://localhost:3000`. The health check is available at `/api/health`.
 
-Users, sessions, orders, inquiries, and newsletter subscriptions are stored in PostgreSQL. The schema is created automatically on startup. On the first run, existing `data/gonidoncloud.db` records are imported into PostgreSQL; if that file is absent, legacy `data/submissions.ndjson` records are imported instead. Source files are kept unchanged as backups, and the entire `data/` directory is excluded from version control. In production, inquiry/invoice requests return a configuration error instead of pretending delivery succeeded.
+## Supabase
 
-To run the data migration without starting the website:
+Create a Supabase project and configure both its Auth API and PostgreSQL connection. Use the **Session Pooler** connection string for local development and Vercel. It is compatible with serverless functions and IPv4 networks. Do not use the direct database host on port `5432`: an `ENETUNREACH` IPv6 error means the direct connection must be replaced with the pooler host on port `6543`.
 
-```bash
-npm run db:migrate
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://PROJECT_REF.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
+DATABASE_URL=postgresql://postgres.PROJECT_REF:PASSWORD@POOLER_HOST:6543/postgres
+PGSSL=true
+PG_POOL_MAX=3
 ```
 
-## Production
+Run `npm run db:migrate` once for a new database. It creates profiles, legacy sessions, orders, order events, submissions, and metadata tables. Existing local SQLite or NDJSON data is imported only when those legacy files exist. Run the command against an empty destination only after verifying the intended `DATABASE_URL`.
 
-Use a long-running Node.js host or VPS, not a static-only deployment. The same process serves the built site and API:
+The application uses the database password only on the server. Do not expose it through `NEXT_PUBLIC_` variables. A Supabase service-role key is not required. Supabase stores the data, so Vercel does not need a persistent volume. The publishable key is safe for browser access; server route handlers use it to validate the user's Supabase Auth session.
 
-```bash
-npm ci
-npm run build
-npm start
-```
-
-`npm start` sets `NODE_ENV=production` and listens on `0.0.0.0:4173` by default. The hosting provider can override `PORT`. Check `GET /api/health` after deployment. The application will not start without a valid `DATABASE_URL`.
-
-Required public configuration:
+## Environment variables
 
 | Variable | Purpose |
 |---|---|
-| `DATABASE_URL` | Required PostgreSQL connection string. On Railway, reference the PostgreSQL service variable instead of copying its credentials. |
-| `PGSSL` | Optional; set to `true` only when the PostgreSQL provider requires SSL. Do not enable it for Railway's internal private connection unless required. |
-| `PUBLIC_URL` | Canonical public HTTPS origin, for example `https://gonidoncloud.com`. Used for Stripe return URLs and OAuth callbacks. |
-| `PORT` | Optional internal HTTP port; defaults to `4173`. |
-| `TRUST_PROXY` | Set to `true` only behind a trusted reverse proxy that sets `X-Forwarded-For`, so rate limits use client IPs rather than one shared proxy IP. |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project API URL used for authentication. |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Supabase publishable key. The legacy `NEXT_PUBLIC_SUPABASE_ANON_KEY` is also supported. |
+| `DATABASE_URL` | Required Supabase Session Pooler connection string. |
+| `PGSSL` | Set to `true` for Supabase TLS connections. |
+| `PG_POOL_MAX` | Optional maximum PostgreSQL connections per serverless instance; defaults to `3`. |
+| `PUBLIC_URL` | Canonical public origin, for example `https://mindpick.com`. Used for metadata, OAuth callbacks, and Stripe return URLs. |
 | `SMTP_URL` + `INQUIRY_TO_EMAIL` | Team and customer email delivery. `MAIL_FROM` optionally overrides the sender. |
 | `FORM_WEBHOOK_URL` | Optional additional inquiry delivery to a CRM or automation webhook. |
-| `STRIPE_SECRET_KEY` | Server-only Stripe secret key; use test keys until the full payment flow is verified. |
-| `STRIPE_WEBHOOK_SECRET` | Signing secret for the production Stripe webhook endpoint. |
-| `SQLITE_PATH` | Optional path to the legacy SQLite file used only for the one-time import; defaults to `data/gonidoncloud.db`. |
+| `STRIPE_SECRET_KEY` | Server-only Stripe secret key; use test keys until the payment flow is verified. |
+| `STRIPE_WEBHOOK_SECRET` | Signing secret for `/api/stripe/webhook`. |
+| `FPU_LINUX_DRIVER_URL`, `FPU_FIRMWARE_URL`, `FPU_SDK_URL` | Optional signed driver download URLs. |
 
-Terminate HTTPS at the hosting provider or reverse proxy and redirect HTTP to HTTPS. Production responses include HSTS and baseline security headers. Keep `.env`, API keys, database credentials, and OAuth secrets in the host's secret manager; never expose them through `VITE_` variables or commit them.
+See `.env.example` for all supported settings. Never commit `.env`, `.env.local`, database credentials, or OAuth secrets.
 
-## Railway PostgreSQL
+## Deploy to Vercel
 
-PostgreSQL uses parameterized queries, transactions, foreign keys, and indexes. Users, persistent login sessions, orders, order events, and form submissions survive deployments and process restarts. Railway's managed PostgreSQL service stores the data, so the web service does **not** need a persistent volume for the database.
+1. Push the repository to GitHub and import it into Vercel.
+2. Keep the detected **Next.js** framework preset. Build: `npm run build`. Output is managed by Next.js.
+3. Add the environment variables above in **Project Settings → Environment Variables**. Use the Supabase Session Pooler URL for `DATABASE_URL` and set `PGSSL=true`.
+4. Set `PUBLIC_URL` to the final HTTPS domain and deploy.
+5. Run `npm run db:migrate` locally against the same Supabase project before using accounts or checkout.
+6. Confirm that `/api/health` returns `"auth":"supabase"` and `"ok":true`.
 
-To deploy on **Railway**:
+For preview deployments, either leave `PUBLIC_URL` unset so callbacks use the current request origin or use a fixed production URL deliberately. Supabase Auth and Stripe webhooks must be configured for the same public domain used by the site.
 
-1. Create a project and deploy the web service from the GitHub repository.
-2. Set the build command to `npm ci && npm run build` and the start command to `npm start`.
-3. Add **PostgreSQL** to the same project.
-4. In the web service, add a Variable Reference named `DATABASE_URL` that references `DATABASE_URL` from the PostgreSQL service.
-5. Set `PUBLIC_URL` to the public HTTPS site URL and configure the other required secrets.
-6. Deploy and confirm that `GET /api/health` returns `"database":"postgresql"`.
+## Email, Google and GitHub sign-in
 
-Enable managed PostgreSQL backups and test restoring a backup before accepting customer orders. Do not paste the database connection string into source control or browser-accessible variables.
+1. In **Supabase Dashboard → Authentication → Sign In / Providers**, keep Email enabled and enable Google and GitHub. Enter OAuth credentials in Supabase, not in the website environment.
+2. In each provider's OAuth application, set Supabase's callback URL: `https://PROJECT_REF.supabase.co/auth/v1/callback`.
+3. In **Supabase → Authentication → URL Configuration**, set Site URL to `https://mindpick.com` and add these redirect URLs:
 
-To import an existing local `data/gonidoncloud.db` into Railway, temporarily set `DATABASE_URL` locally to Railway's **public** PostgreSQL connection URL and run `npm run db:migrate` from the project root. The import runs only once per target database. Keep the source SQLite file in place until the imported users and orders have been verified, and never publish the connection URL.
+```text
+https://mindpick.com/api/auth/google/callback
+https://mindpick.com/api/auth/github/callback
+https://mindpick.com/api/auth/confirm
+http://localhost:3000/api/auth/google/callback
+http://localhost:3000/api/auth/github/callback
+http://localhost:3000/api/auth/confirm
+```
 
-## Form delivery
+Email sign-up, password sign-in, email confirmation, and password recovery are available at `/login`. For production email delivery, configure SMTP in **Supabase → Authentication → SMTP**; the built-in email service is intended only for development and has strict rate limits.
 
-`POST /api/inquiries` validates and rate-limits submissions, ignores honeypot spam, assigns a `GC-*` reference, and persists the request. Delivery can use:
+The website uses Supabase's PKCE flow and HttpOnly session cookies. Authentication and password hashes are handled by Supabase Auth; profiles and orders are stored in the site's public PostgreSQL tables. Passwords are never written to the public `users` table. Apple sign-in is not available.
 
-1. `SMTP_URL` + `INQUIRY_TO_EMAIL` for team notification and customer acknowledgement;
-2. `FORM_WEBHOOK_URL` for Zapier, Make, a CRM, or a custom backend;
-3. both simultaneously for redundancy.
+## Stripe
 
-`POST /api/newsletter` validates and stores subscriptions for export or synchronization with an email platform.
+Configure a Stripe webhook for `/api/stripe/webhook` with `checkout.session.completed` and `checkout.session.async_payment_succeeded`. Stripe success and cancellation routes use normal Next.js paths such as `/order/success/ORDER_ID`.
 
-Apply appropriate encryption, retention/deletion policies, access logging, and backups to customer data. Managed database backups and restricted database access protect stored data; HTTPS protects it in transit.
+Production forms require SMTP or a form webhook. Inquiries, invoice orders, and payments are validated on the server. Prices are owned by the server-side catalog, not supplied by the browser.
 
-## Payments
+## Useful commands
 
-The server owns the product price allowlist. The browser cannot set prices or card details.
-
-- **Card:** `POST /api/checkout` creates a Stripe-hosted Checkout Session and redirects the customer to Stripe. Configure `STRIPE_SECRET_KEY`; enable `STRIPE_AUTOMATIC_TAX` only after configuring Stripe Tax.
-- **Invoice:** the same endpoint records the order and notifies sales to issue a verified pro forma invoice with final taxes, delivery, and bank instructions.
-- **Fulfillment:** point a Stripe webhook to `/api/stripe/webhook` for `checkout.session.completed` and `checkout.session.async_payment_succeeded`. Set `STRIPE_WEBHOOK_SECRET`. Only webhook-confirmed orders are marked `paid`.
-
-Before accepting real payments, configure the legal seller entity, Stripe account, tax registrations, shipping/duty policy, inventory, refunds, support ownership, and fulfillment alerts. Use Stripe test mode first.
-
-## Accounts and downloads
-
-The account area supports Google, Apple, and GitHub OAuth, editable profiles, order history, fulfillment status, and driver downloads. Configure `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET`, `APPLE_CLIENT_ID` with Apple credentials, and `GITHUB_CLIENT_ID`/`GITHUB_CLIENT_SECRET` in the server environment. Register these exact callback URLs:
-
-- `PUBLIC_URL/api/auth/google/callback`
-- `PUBLIC_URL/api/auth/apple/callback`
-- `PUBLIC_URL/api/auth/github/callback`
-
-Apple requires `form_post` callback support, which the server provides. OAuth sessions use HTTP-only, SameSite cookies; production sessions also require HTTPS. Sessions are stored in PostgreSQL for seven days and survive application restarts.
-
-Authenticated checkouts are linked to the account automatically. Stripe webhooks confirm payment status without duplicating customer notifications on retries. Fulfillment integrations can call `await updateOrder(...)` from `server/database.js` with `processing`, `shipped`, or `delivered`, plus optional `carrier` and `trackingNumber` fields. Configure signed driver URLs with `FPU_LINUX_DRIVER_URL`, `FPU_FIRMWARE_URL`, and `FPU_SDK_URL`; unpublished packages are never presented as downloadable files.
-
-## Legal content
-
-The Legal & Compliance center includes original GonidonCloud drafts covering the core AMD footer policies and ecommerce requirements: privacy, terms/copyright, trademarks, cookies, privacy choices, accessibility, sale terms, EULA, trade compliance, product security, WEEE, supply chain, competition, UK tax, procurement, and partner standards.
-
-These are product-ready drafts, not a substitute for legal advice. Counsel should adapt company registration, addresses, governing law, consumer rights, regional privacy clauses, tax disclosures, warranty periods, export classifications, and entity-specific statutory statements before launch.
-
-## Theme and privacy
-
-The light/dark theme follows system preference on first visit and persists in `localStorage`. Cookie preferences are stored separately. No analytics or advertising scripts are installed; consent categories are ready for a future consent-aware loader.
-# burmalda
+```bash
+npm run dev         # Next.js development server
+npm run build       # Production build
+npm start           # Serve the production build locally
+npm run db:migrate  # Create or migrate the Supabase schema
+```

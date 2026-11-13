@@ -20,7 +20,7 @@ export const linkRoutes = {
   'Healthcare & Life Sciences': '/solutions/healthcare',
   'Manufacturing': '/solutions/manufacturing',
   'Telecommunications': '/solutions/telecommunications',
-  'Documentation': 'https://gonidoncloud.github.io/fpu-documentation/',
+  'Documentation': 'https://mindpick.github.io/fpu-documentation/',
   'Cloud Platform': '/software/cloud-platform',
   'Developer Hub': '/resources/developer-hub',
   'Partner Network': '/partners',
@@ -41,7 +41,7 @@ export const linkRoutes = {
 const productFeatures = [
   { title: 'Performance with purpose', text: 'A balanced architecture designed to keep demanding workloads moving efficiently.' },
   { title: 'Open at every layer', text: 'Industry-standard software and modular system design help you avoid unnecessary lock-in.' },
-  { title: 'Validated for production', text: 'Tested with leading platforms and supported by GonidonCloud systems engineers.' },
+  { title: 'Validated for production', text: 'Tested with leading platforms and supported by Mindpick systems engineers.' },
 ];
 
 const solutionFeatures = [
@@ -53,7 +53,7 @@ const solutionFeatures = [
 const resourceFeatures = [
   { title: 'Clear and practical', text: 'Straightforward guidance created by the engineers who design and validate our platforms.' },
   { title: 'Built for real deployments', text: 'Use proven configurations and examples to reduce the path from evaluation to production.' },
-  { title: 'Expert help when needed', text: 'Connect with GonidonCloud specialists for architectural and implementation guidance.' },
+  { title: 'Expert help when needed', text: 'Connect with Mindpick specialists for architectural and implementation guidance.' },
 ];
 
 const companyFeatures = [
@@ -115,38 +115,38 @@ export const pages = {
   '/solutions/healthcare': makePage('Solutions', 'Healthcare & Life Sciences', 'Advance research, imaging, and patient insight with secure compute for data-intensive discovery.', 'processor'),
   '/solutions/manufacturing': makePage('Solutions', 'Manufacturing', 'Power simulation, digital twins, and intelligent operations from the engineering workstation to the factory edge.', 'server'),
   '/solutions/telecommunications': makePage('Solutions', 'Telecommunications', 'Build efficient, scalable networks with high-throughput compute for core, edge, and AI-native services.', 'processor'),
-  '/software/cloud-platform': makePage('Software', 'GonidonCloud Platform', 'A unified cloud experience for discovering, deploying, and managing GonidonCloud infrastructure is currently in development.', 'server', {
+  '/software/cloud-platform': makePage('Software', 'Mindpick Platform', 'A unified cloud experience for discovering, deploying, and managing Mindpick infrastructure is currently in development.', 'server', {
     status: 'COMING SOON',
     contentTitle: 'Your infrastructure. One clear view.',
     features: [
       { title: 'Planned: centralized management', text: 'A single workspace is planned for organizing infrastructure, reviewing deployments, and keeping track of your cloud resources.' },
       { title: 'Planned: streamlined deployment', text: 'Guided workflows are intended to help teams move from selecting a configuration to preparing a deployment with less operational friction.' },
-      { title: 'Planned: account-ready access', text: 'The platform is being designed around your GonidonCloud account, with orders, software resources, and support close at hand.' },
+      { title: 'Planned: account-ready access', text: 'The platform is being designed around your Mindpick account, with orders, software resources, and support close at hand.' },
     ],
   }),
   '/resources/reference-architectures': makePage('Resources', 'Reference Architectures', 'Start with validated combinations of compute, accelerators, networking, storage, and software for common workloads.', 'server'),
   '/resources/documentation': makePage('Resources', 'Documentation', 'Find installation guides, platform specifications, compatibility information, and deployment best practices.', 'server'),
   '/resources/developer-hub': makePage('Resources', 'Developer Hub', 'Build on open software with quickstarts, APIs, code samples, optimization guides, and community projects.', 'accelerator'),
-  '/partners': makePage('Resources', 'Partner Network', 'Connect with system integrators, cloud providers, software innovators, and channel partners in the GonidonCloud ecosystem.', 'server'),
+  '/partners': makePage('Resources', 'Partner Network', 'Connect with system integrators, cloud providers, software innovators, and channel partners in the Mindpick ecosystem.', 'server'),
   '/partners/suppliers': makePage('Resources', 'Supplier Hub', 'Access supplier expectations, responsible sourcing standards, onboarding resources, and partnership contacts.', 'server'),
   '/support': makePage('Support', 'Support Center', 'Get help with product selection, deployment, platform operation, and ongoing technical support.', 'server'),
-  '/support/downloads': makePage('Support', 'Drivers & Downloads', 'Find the latest validated platform software, firmware, drivers, and release documentation for your GonidonCloud system.', 'processor'),
+  '/support/downloads': makePage('Support', 'Drivers & Downloads', 'Find the latest validated platform software, firmware, drivers, and release documentation for your Mindpick system.', 'processor'),
   '/support/warranty': makePage('Support', 'Warranty Services', 'Understand coverage, check service options, and get help with hardware warranty requests.', 'server'),
-  '/company/about': makePage('Company', 'About GonidonCloud', 'We are a team of engineers and problem-solvers building open, efficient processors and systems for the next era of computing.', 'processor'),
+  '/company/about': makePage('Company', 'About Mindpick', 'We are a team of engineers and problem-solvers building open, efficient processors and systems for the next era of computing.', 'processor'),
   '/company/leadership': makePage('Company', 'Leadership', 'Meet the team bringing together deep silicon, systems, software, and operational experience to build a different kind of compute company.', 'server'),
-  '/company/newsroom': makePage('Company', 'Newsroom', 'The latest product announcements, partnerships, and stories from GonidonCloud.', 'processor', { showNews: true }),
-  '/company/careers': makePage('Company', 'Careers at GonidonCloud', 'Join engineers, researchers, and builders working on the foundations of the next generation of computing.', 'processor'),
+  '/company/newsroom': makePage('Company', 'Newsroom', 'The latest product announcements, partnerships, and stories from Mindpick.', 'processor', { showNews: true }),
+  '/company/careers': makePage('Company', 'Careers at Mindpick', 'Join engineers, researchers, and builders working on the foundations of the next generation of computing.', 'processor'),
   '/company/responsibility': makePage('Company', 'Corporate Responsibility', 'We aim to create long-term value through responsible engineering, transparent operations, and positive community impact.', 'server'),
   '/company/sustainability': makePage('Company', 'Sustainability', 'Designing more efficient computing and reducing environmental impact across products, operations, and the supply chain.', 'processor', { stats: [{ value: '30%', label: 'target energy-use reduction' }, { value: '100%', label: 'renewable operations goal' }, { value: '2035', label: 'net-zero ambition' }] }),
   '/company/diversity': makePage('Company', 'Diversity & Inclusion', 'Different perspectives make better technology. We are building a workplace where every engineer can contribute and belong.', 'server'),
-  '/company/contact': makePage('Company', 'Contact us', 'Connect with GonidonCloud for product guidance, technical support, partnerships, careers, and company inquiries.', 'server'),
+  '/company/contact': makePage('Company', 'Contact us', 'Connect with Mindpick for product guidance, technical support, partnerships, careers, and company inquiries.', 'server'),
 };
 
 const relatedByCategory = {
   Products: [{ title: 'FlowSystem R 1100 Enterprise Servers', text: 'Deploy a balanced Apollon and FPU infrastructure platform.', to: '/systems/flowsystem-r-1100' }, { title: 'Reference Architectures', text: 'Start with a proven configuration for your workload.', to: '/resources/reference-architectures' }, { title: 'Documentation', text: 'Explore specifications and deployment guidance.', to: '/resources/documentation' }],
   Systems: [{ title: 'FPU Apollon 1100 Processors', text: 'Meet the host compute platform inside FlowSystem R servers.', to: '/products/fpu-apollon-1100' }, { title: 'AI Infrastructure', text: 'Build an open foundation for training and inference.', to: '/solutions/ai' }, { title: 'Support Center', text: 'Plan your deployment with an infrastructure expert.', to: '/support' }],
   Solutions: [{ title: 'FPU Apollon 1100 Processors', text: 'High-density host compute for demanding workloads.', to: '/products/fpu-apollon-1100' }, { title: 'FPU 1100 AI Accelerators', text: 'Flow Processing Unit acceleration for training and inference.', to: '/products/fpu-1100' }, { title: 'Reference Architectures', text: 'See how the complete platform fits together.', to: '/resources/reference-architectures' }],
-  Company: [{ title: 'Our technology', text: 'Explore the FPU Apollon 1100 architecture.', to: '/products/fpu-apollon-1100' }, { title: 'Newsroom', text: 'Read the latest from GonidonCloud.', to: '/company/newsroom' }, { title: 'Careers', text: 'Build the future of compute with us.', to: '/company/careers' }],
+  Company: [{ title: 'Our technology', text: 'Explore the FPU Apollon 1100 architecture.', to: '/products/fpu-apollon-1100' }, { title: 'Newsroom', text: 'Read the latest from Mindpick.', to: '/company/newsroom' }, { title: 'Careers', text: 'Build the future of compute with us.', to: '/company/careers' }],
   default: [{ title: 'Developer Hub', text: 'Start building with open tools and examples.', to: '/resources/developer-hub' }, { title: 'Reference Architectures', text: 'Explore validated infrastructure designs.', to: '/resources/reference-architectures' }, { title: 'Contact an Expert', text: 'Get practical guidance from our engineering team.', to: '/support' }],
 };
 

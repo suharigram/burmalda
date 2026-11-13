@@ -1,32 +1,32 @@
-# GonidonCloud
+# Mindpick
 
-> GonidonCloud designs high-performance processors, AI accelerators, and rack-scale server systems for AI, cloud, high-performance computing, and data analytics.
+> Mindpick designs high-performance processors, AI accelerators, and rack-scale server systems for AI, cloud, high-performance computing, and data analytics.
 
-GonidonCloud is a computing infrastructure company. Its compute portfolio includes FPU Apollon 1100 server processors, FPU 1100 AI accelerators, FPU Force 1100 server GPUs, FlowForce workstations and edge systems, and FlowSystem enterprise servers. FPU means Flow Processing Unit. Apollon can operate independently or alongside FPU 1100 accelerators. Product availability and shipping estimates must be checked on the relevant product page. Pre-orders currently have an expected first shipment window of Q1 2027.
+Mindpick is a computing infrastructure company. Its compute portfolio includes FPU Apollon 1100 server processors, FPU 1100 AI accelerators, FPU Force 1100 server GPUs, FlowForce workstations and edge systems, and FlowSystem enterprise servers. FPU means Flow Processing Unit. Apollon can operate independently or alongside FPU 1100 accelerators. Product availability and shipping estimates must be checked on the relevant product page. Pre-orders currently have an expected first shipment window of Q1 2027.
 
 ## Products
 
-- [FPU Apollon 1100 Server Processors](https://gonidoncloud.com/products/fpu-apollon-1100): High-core-density server processors with DDR5 memory and PCIe 5.0 connectivity.
-- [FPU 1100 AI Accelerators](https://gonidoncloud.com/products/fpu-1100): Flow Processing Unit accelerators for AI training and inference with an open software ecosystem.
-- [FPU Force 1100 Server GPUs](https://gonidoncloud.com/products/fpu-force-1100): Server graphics for visualization, parallel processing, and virtual graphics infrastructure.
-- [FlowForce W 1100 Workstation](https://gonidoncloud.com/systems/flowforce-w-1100): Professional workstation for AI development, engineering, and visualization.
-- [FlowForce E 1100 Edge System](https://gonidoncloud.com/systems/flowforce-e-1100): Compact edge computer for local AI, intelligent devices, and inference.
-- [FlowSystem R 1100 Enterprise Servers](https://gonidoncloud.com/systems/flowsystem-r-1100): Enterprise servers combining Apollon host compute and FPU acceleration.
+- [FPU Apollon 1100 Server Processors](https://mindpick.com/products/fpu-apollon-1100): High-core-density server processors with DDR5 memory and PCIe 5.0 connectivity.
+- [FPU 1100 AI Accelerators](https://mindpick.com/products/fpu-1100): Flow Processing Unit accelerators for AI training and inference with an open software ecosystem.
+- [FPU Force 1100 Server GPUs](https://mindpick.com/products/fpu-force-1100): Server graphics for visualization, parallel processing, and virtual graphics infrastructure.
+- [FlowForce W 1100 Workstation](https://mindpick.com/systems/flowforce-w-1100): Professional workstation for AI development, engineering, and visualization.
+- [FlowForce E 1100 Edge System](https://mindpick.com/systems/flowforce-e-1100): Compact edge computer for local AI, intelligent devices, and inference.
+- [FlowSystem R 1100 Enterprise Servers](https://mindpick.com/systems/flowsystem-r-1100): Enterprise servers combining Apollon host compute and FPU acceleration.
 
 ## Solutions
 
-- [Artificial Intelligence](https://gonidoncloud.com/solutions/ai)
-- [Cloud Computing](https://gonidoncloud.com/solutions/cloud)
-- [High-Performance Computing](https://gonidoncloud.com/solutions/hpc)
-- [Data Analytics](https://gonidoncloud.com/solutions/data-analytics)
+- [Artificial Intelligence](https://mindpick.com/solutions/ai)
+- [Cloud Computing](https://mindpick.com/solutions/cloud)
+- [High-Performance Computing](https://mindpick.com/solutions/hpc)
+- [Data Analytics](https://mindpick.com/solutions/data-analytics)
 
 ## Resources
 
-- [Documentation](https://gonidoncloud.com/resources/documentation)
-- [Developer Hub](https://gonidoncloud.com/resources/developer-hub)
-- [Drivers and Downloads](https://gonidoncloud.com/support/downloads)
-- [Support Center](https://gonidoncloud.com/support)
-- [Company information](https://gonidoncloud.com/company/about)
-- [Newsroom](https://gonidoncloud.com/company/newsroom)
-- [Store](https://gonidoncloud.com/store)
-- [Sitemap](https://gonidoncloud.com/sitemap.xml)
+- [Documentation](https://mindpick.com/resources/documentation)
+- [Developer Hub](https://mindpick.com/resources/developer-hub)
+- [Drivers and Downloads](https://mindpick.com/support/downloads)
+- [Support Center](https://mindpick.com/support)
+- [Company information](https://mindpick.com/company/about)
+- [Newsroom](https://mindpick.com/company/newsroom)
+- [Store](https://mindpick.com/store)
+- [Sitemap](https://mindpick.com/sitemap.xml)
