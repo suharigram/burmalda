@@ -65,7 +65,7 @@ const navigation = [
     label: 'Company',
     sidebar: true,
     columns: [
-      { title: 'Mindpick', links: ['About Us', 'Leadership', 'Newsroom', 'Careers', 'Contact us'] },
+      { title: 'Clod Le Grade', links: ['About Us', 'Leadership', 'Newsroom', 'Careers', 'Contact us'] },
       { title: 'Our commitments', links: ['Corporate Responsibility', 'Sustainability', 'Diversity & Inclusion', 'Supplier Hub'] },
     ],
     feature: { eyebrow: 'OUR PURPOSE', title: 'Compute for good.', text: 'Technology should move everyone forward.', target: '/company/about' },
@@ -74,17 +74,17 @@ const navigation = [
 
 const products = [
   {
-    type: 'processor', eyebrow: 'MINDPICK FPU APOLLON 1100™', title: 'Server Processors',
+    type: 'processor', eyebrow: 'CLOD LE GRADE FPU APOLLON 1100™', title: 'Server Processors',
     text: 'High-density host compute, powerful standalone or paired with FPU 1100 AI acceleration.',
     link: 'Explore Apollon processors', target: '/products/fpu-apollon-1100', tag: 'PRE-ORDER: SHIPS Q1 2027',
   },
   {
-    type: 'accelerator', eyebrow: 'MINDPICK FPU 1100™', title: 'AI Accelerators',
+    type: 'accelerator', eyebrow: 'CLOD LE GRADE FPU 1100™', title: 'AI Accelerators',
     text: 'Flow Processing Unit acceleration for training and inference, backed by an open software ecosystem.',
     link: 'Explore FPU 1100', target: '/products/fpu-1100', tag: 'OPEN BY DESIGN',
   },
   {
-    type: 'accelerator', eyebrow: 'MINDPICK FPU FORCE 1100™', title: 'Server GPUs',
+    type: 'accelerator', eyebrow: 'CLOD LE GRADE FPU FORCE 1100™', title: 'Server GPUs',
     text: 'A dedicated graphics family for visualization, parallel processing, and virtual graphics infrastructure.',
     link: 'Explore Force server GPUs', target: '/products/fpu-force-1100', tag: 'SERVER GRAPHICS',
   },
@@ -99,15 +99,15 @@ const searchItems = [
   { title: 'FPU Force 1100 Server GPUs', category: 'Product', target: '/products/fpu-force-1100' },
   { title: 'AI Infrastructure Solutions', category: 'Solution', target: '/solutions/ai' },
   { title: 'Cloud Computing Solutions', category: 'Solution', target: '/solutions/cloud' },
-  { title: 'Documentation & Developer Resources', category: 'Resource', target: 'https://mindpick.github.io/fpu-documentation/' },
-  { title: 'Mindpick Newsroom', category: 'Company', target: '/company/newsroom' },
+  { title: 'Documentation & Developer Resources', category: 'Resource', target: 'https://clodlegrade.github.io/fpu-documentation/' },
+  { title: 'Clod Le Grade Newsroom', category: 'Company', target: '/company/newsroom' },
   { title: 'Contact an Expert', category: 'Support', target: 'contact' },
 ];
 
 const news = [
   {
     date: 'October 21, 2026', type: 'PRODUCT NEWS',
-    title: 'Mindpick introduces FPU Apollon 1100 processors for the next era of compute',
+    title: 'Clod Le Grade introduces FPU Apollon 1100 processors for the next era of compute',
     text: 'The new FPU Apollon 1100 family brings leadership core density, next-generation memory, and advanced security to cloud and enterprise data centers.',
     art: 'chip',
   },
@@ -125,7 +125,7 @@ const news = [
   },
   {
     date: 'September 10, 2026', type: 'ENGINEERING',
-    title: 'One team, one architecture: how Mindpick is rethinking compute',
+    title: 'One team, one architecture: how Clod Le Grade is rethinking compute',
     text: 'Our silicon, systems, and software engineers are working side by side to create a more coherent platform—and remove the compromises that slow ambitious teams down.',
     art: 'chip',
   },
@@ -177,8 +177,8 @@ function Header({ onSearch, onContact, theme, onToggleTheme, user }) {
       )}
       <header className="site-header" ref={headerRef}>
         <div className="container header__inner">
-          <a href="/" className="header__brand" aria-label="Mindpick home" onClick={closeMenus}><Brand /></a>
-          <a className="header__github" href="https://github.com/mindpick" target="_blank" rel="noreferrer"><Github size={16} /> Open source</a>
+          <a href="/" className="header__brand" aria-label="Clod Le Grade home" onClick={closeMenus}><Brand /></a>
+          <a className="header__github" href="https://github.com/clodlegrade" target="_blank" rel="noreferrer"><Github size={16} /> Open source</a>
           <nav className="desktop-nav" aria-label="Main navigation">
             {navigation.map((item) => (
               <button key={item.label} className={activeMenu === item.label ? 'active' : ''} onClick={() => { setActiveMenu(activeMenu === item.label ? null : item.label); setActiveProductTab(item.columns[0].title); }} aria-expanded={activeMenu === item.label}>
@@ -259,12 +259,12 @@ function ContactModal({ onClose }) {
       if (!response.ok) throw new Error(result.message || 'Your inquiry could not be sent.');
       setRequestId(result.requestId); setStatus('success');
     } catch (requestError) {
-      setError(requestError.message || 'The form is temporarily unavailable. Please email sales@mindpick.com.');
+      setError(requestError.message || 'The form is temporarily unavailable. Please email sales@clodlegrade.com.');
       setStatus('error');
     }
   };
   return (
-    <Modal onClose={onClose} label="Contact Mindpick" className="contact-modal">
+    <Modal onClose={onClose} label="Contact Clod Le Grade" className="contact-modal">
       {status !== 'success' ? (
         <>
           <span className="eyebrow eyebrow--red">LET'S BUILD TOGETHER</span>
@@ -278,13 +278,13 @@ function ContactModal({ onClose }) {
             <label>How can we help?<textarea name="message" rows="3" placeholder="Tell us a little about your project" maxLength="5000" /></label>
             <label className="form-honeypot" aria-hidden="true">Website<input name="website" tabIndex="-1" autoComplete="off" /></label>
             <label className="contact-form__consent"><input type="checkbox" name="privacyConsent" value="true" required /><span>I have read the <a href="/legal/privacy" target="_blank">Privacy Policy</a> and consent to being contacted about this inquiry.</span></label>
-            {error && <div className="form-error" role="alert"><AlertCircle size={18} /><span>{error} You can also email <a href="mailto:sales@mindpick.com">sales@mindpick.com</a>.</span></div>}
+            {error && <div className="form-error" role="alert"><AlertCircle size={18} /><span>{error} You can also email <a href="mailto:sales@clodlegrade.com">sales@clodlegrade.com</a>.</span></div>}
             <button className="button button--red" type="submit" disabled={status === 'submitting'}>{status === 'submitting' ? 'Sending securely…' : 'Send inquiry'}<ArrowRight size={17} /></button>
             <small>Encrypted in transit. We use your details only to respond and meet our legal obligations.</small>
           </form>
         </>
       ) : (
-        <div className="form-success"><span><Check size={32} /></span><h2>We’re on it.</h2><p>Your inquiry was received. Reference <strong>{requestId}</strong>. A Mindpick engineer will respond within one business day.</p><button className="button button--dark" onClick={onClose}>Back to the site</button></div>
+        <div className="form-success"><span><Check size={32} /></span><h2>We’re on it.</h2><p>Your inquiry was received. Reference <strong>{requestId}</strong>. A Clod Le Grade engineer will respond within one business day.</p><button className="button button--dark" onClick={onClose}>Back to the site</button></div>
       )}
     </Modal>
   );
@@ -295,7 +295,7 @@ function SearchModal({ onClose, onContact }) {
   const results = searchItems.filter((item) => `${item.title} ${item.category}`.toLowerCase().includes(query.toLowerCase()));
   const goTo = (target) => { onClose(); setTimeout(() => target === 'contact' ? onContact() : target.startsWith('http') ? window.open(target, '_blank', 'noopener,noreferrer') : window.location.assign(target), 50); };
   return (
-    <Modal onClose={onClose} label="Search Mindpick" className="search-modal">
+    <Modal onClose={onClose} label="Search Clod Le Grade" className="search-modal">
       <div className="search-modal__brand"><Brand /></div>
       <div className="search-field"><Search size={25} /><input autoFocus value={query} onChange={(event) => setQuery(event.target.value)} placeholder="What are you looking for?" aria-label="Search query" />{query && <button onClick={() => setQuery('')} aria-label="Clear search"><X size={19} /></button>}</div>
       <div className="search-results">
@@ -319,8 +319,8 @@ function ArchitectureModal({ onClose }) {
 
 function ComputeConsole() {
   return (
-    <div className="compute-console" aria-label="Mindpick platform console">
-      <div className="compute-console__bar"><div><span /><span /><span /></div><small>mindpick / platform</small><span>⌘ K</span></div>
+    <div className="compute-console" aria-label="Clod Le Grade platform console">
+      <div className="compute-console__bar"><div><span /><span /><span /></div><small>clodlegrade / platform</small><span>⌘ K</span></div>
       <div className="compute-console__body">
         <div className="compute-console__command"><span>~</span><code>fpu status --cluster production</code><i>RUNNING</i></div>
         <div className="compute-console__grid">
@@ -482,7 +482,7 @@ function App() {
         <section className="summit-section" id="summit">
           <div className="container summit-section__inner">
             <div className="summit-section__visual"><RackVisual /></div>
-            <div className="summit-section__content"><span className="eyebrow eyebrow--red">MINDPICK SUMMIT™</span><h2>Your entire data center.<br />Reimagined.</h2><p>Break through the limits of traditional infrastructure. FlowSystem R rack-scale systems unite compute, acceleration, networking, and cooling in one intelligent platform.</p><ul><li><Check size={18} />Pre-validated, rack-scale deployment</li><li><Check size={18} />Direct liquid cooling ready</li><li><Check size={18} />Open, modular architecture</li></ul><button className="button button--light" onClick={() => setContactOpen(true)}>Build your FlowSystem R system <ArrowRight size={18} /></button></div>
+            <div className="summit-section__content"><span className="eyebrow eyebrow--red">CLOD LE GRADE SUMMIT™</span><h2>Your entire data center.<br />Reimagined.</h2><p>Break through the limits of traditional infrastructure. FlowSystem R rack-scale systems unite compute, acceleration, networking, and cooling in one intelligent platform.</p><ul><li><Check size={18} />Pre-validated, rack-scale deployment</li><li><Check size={18} />Direct liquid cooling ready</li><li><Check size={18} />Open, modular architecture</li></ul><button className="button button--light" onClick={() => setContactOpen(true)}>Build your FlowSystem R system <ArrowRight size={18} /></button></div>
           </div>
         </section>
 
@@ -496,36 +496,36 @@ function App() {
               <div className={`solution-panel__visual solution-panel__visual--${solution.toLowerCase()}`}><div className="solution-orbit solution-orbit--one" /><div className="solution-orbit solution-orbit--two" /><SolutionIcon size={94} strokeWidth={.75} /><div className="solution-panel__nodes">{Array.from({ length: 6 }, (_, i) => <span key={i} />)}</div><span className="solution-panel__visual-label">{solution} / OPTIMIZED</span></div>
               <div className="solution-panel__content"><span className="eyebrow">{solution === 'AI' ? 'ARTIFICIAL INTELLIGENCE' : solution === 'HPC' ? 'HIGH-PERFORMANCE COMPUTING' : solution === 'Data' ? 'DATA ANALYTICS' : 'CLOUD COMPUTING'}</span><h3>{currentSolution.title}</h3><p>{currentSolution.text}</p><div className="solution-stat"><strong>???</strong><span>{currentSolution.statText}<sup>1</sup></span></div><a className="text-link" href={`${{ AI: '/solutions/ai', Cloud: '/solutions/cloud', HPC: '/solutions/hpc', Data: '/solutions/data-analytics' }[solution]}`}>{currentSolution.link}<ArrowRight size={17} /></a></div>
             </div>
-            <p className="benchmark-note">1. Projected performance based on Mindpick internal testing. Results vary by configuration and workload.</p>
+            <p className="benchmark-note">1. Projected performance based on Clod Le Grade internal testing. Results vary by configuration and workload.</p>
           </div>
         </section>
 
         <section className="numbers-section" id="company">
-          <div className="container numbers-section__inner"><div className="numbers-section__intro"><span className="eyebrow">WHY MINDPICK</span><h2>Big ideas need<br />better foundations.</h2><p>We are engineers, optimists, and relentless problem-solvers building a more open future for compute.</p><a className="text-link text-link--light" href="/company/about">Meet Mindpick <ArrowRight size={17} /></a></div><div className="numbers-grid"><div><strong>30%</strong><span>target reduction in data center energy use<sup>2</sup></span></div><div><strong>100%</strong><span>open software approach</span></div><div><strong>24/7</strong><span>global engineering support</span></div><div><Leaf size={40} strokeWidth={1.25} /><span>Designed for a more sustainable future</span></div></div></div>
+          <div className="container numbers-section__inner"><div className="numbers-section__intro"><span className="eyebrow">WHY CLOD LE GRADE</span><h2>Big ideas need<br />better foundations.</h2><p>We are engineers, optimists, and relentless problem-solvers building a more open future for compute.</p><a className="text-link text-link--light" href="/company/about">Meet Clod Le Grade <ArrowRight size={17} /></a></div><div className="numbers-grid"><div><strong>30%</strong><span>target reduction in data center energy use<sup>2</sup></span></div><div><strong>100%</strong><span>open software approach</span></div><div><strong>24/7</strong><span>global engineering support</span></div><div><Leaf size={40} strokeWidth={1.25} /><span>Designed for a more sustainable future</span></div></div></div>
           <div className="container numbers-section__foot">2. Based on a comparison of projected FPU Apollon 1100 rack performance against our previous-generation platform.</div>
         </section>
 
         <section className="resources-section section" id="resources">
-          <div className="container resources-section__inner"><div className="resources-section__content"><span className="eyebrow eyebrow--red">OPEN BY DESIGN</span><h2>The tools to build<br />what’s next.</h2><p>Move from idea to deployment faster with production-ready software, detailed documentation, and a community that has your back.</p><div className="resource-links"><a href="/resources/developer-hub"><span><Layers3 size={22} />Developer Hub<small>Software, tools, and open-source projects</small></span><ArrowUpRight size={19} /></a><a href="https://mindpick.github.io/fpu-documentation/" target="_blank" rel="noreferrer"><span><Server size={22} />Documentation<small>Guides, specifications, and best practices</small></span><ArrowUpRight size={19} /></a><a href="/support"><span><MessageSquare size={22} />Expert Support<small>Connect with a Mindpick engineer</small></span><ArrowUpRight size={19} /></a></div></div><div className="code-window"><div className="code-window__bar"><span /><span /><span /><small>fpu1100-quickstart.py</small></div><pre><code><span className="code-purple">from</span> mindpick <span className="code-purple">import</span> fpu1100{`\n\n`}<span className="code-gray"># One platform. Every possibility.</span>{`\n`}platform = fpu1100.<span className="code-blue">connect</span>(){`\n`}cluster = platform.<span className="code-blue">create_cluster</span>({`\n`}  name=<span className="code-green">"what's-next"</span>,{`\n`}  nodes=<span className="code-orange">64</span>,{`\n`}  accelerator=<span className="code-green">"fpu-1100"</span>{`\n`}){`\n\n`}cluster.<span className="code-blue">deploy</span>(){`\n`}<span className="code-gray"># Ready. Set. Build.</span></code></pre><div className="code-window__status"><span><i /> CLUSTER READY</span><small>64 / 64 NODES ONLINE</small></div></div></div>
+          <div className="container resources-section__inner"><div className="resources-section__content"><span className="eyebrow eyebrow--red">OPEN BY DESIGN</span><h2>The tools to build<br />what’s next.</h2><p>Move from idea to deployment faster with production-ready software, detailed documentation, and a community that has your back.</p><div className="resource-links"><a href="/resources/developer-hub"><span><Layers3 size={22} />Developer Hub<small>Software, tools, and open-source projects</small></span><ArrowUpRight size={19} /></a><a href="https://clodlegrade.github.io/fpu-documentation/" target="_blank" rel="noreferrer"><span><Server size={22} />Documentation<small>Guides, specifications, and best practices</small></span><ArrowUpRight size={19} /></a><a href="/support"><span><MessageSquare size={22} />Expert Support<small>Connect with a Clod Le Grade engineer</small></span><ArrowUpRight size={19} /></a></div></div><div className="code-window"><div className="code-window__bar"><span /><span /><span /><small>fpu1100-quickstart.py</small></div><pre><code><span className="code-purple">from</span> clodlegrade <span className="code-purple">import</span> fpu1100{`\n\n`}<span className="code-gray"># One platform. Every possibility.</span>{`\n`}platform = fpu1100.<span className="code-blue">connect</span>(){`\n`}cluster = platform.<span className="code-blue">create_cluster</span>({`\n`}  name=<span className="code-green">"what's-next"</span>,{`\n`}  nodes=<span className="code-orange">64</span>,{`\n`}  accelerator=<span className="code-green">"fpu-1100"</span>{`\n`}){`\n\n`}cluster.<span className="code-blue">deploy</span>(){`\n`}<span className="code-gray"># Ready. Set. Build.</span></code></pre><div className="code-window__status"><span><i /> CLUSTER READY</span><small>64 / 64 NODES ONLINE</small></div></div></div>
         </section>
 
         <section className="news-section section" id="newsroom">
-          <div className="container"><div className="news-section__heading"><div><span className="eyebrow">THE LATEST</span><h2>What’s happening at Mindpick.</h2></div><a className="text-link" href="/company/newsroom">Visit the newsroom <ArrowRight size={17} /></a></div><div className="news-grid">{news.slice(0, 3).map((article) => <article className="news-card" key={article.title}><button className={`news-card__art news-card__art--${article.art}`} onClick={() => setActiveArticle(article)} aria-label={`Read: ${article.title}`}>{article.art === 'chip' && <Cpu size={80} strokeWidth={.7} />}{article.art === 'network' && <><Globe2 size={92} strokeWidth={.65} /><span className="network-dot network-dot--one" /><span className="network-dot network-dot--two" /></>}{article.art === 'building' && <><div className="building-shape" /><Leaf size={56} strokeWidth={.9} /></>}</button><div className="news-card__body"><div className="news-card__meta"><span>{article.type}</span><time>{article.date}</time></div><h3>{article.title}</h3><button className="text-link" onClick={() => setActiveArticle(article)}>Read the story <ArrowUpRight size={16} /></button></div></article>)}</div></div>
+          <div className="container"><div className="news-section__heading"><div><span className="eyebrow">THE LATEST</span><h2>What’s happening at Clod Le Grade.</h2></div><a className="text-link" href="/company/newsroom">Visit the newsroom <ArrowRight size={17} /></a></div><div className="news-grid">{news.slice(0, 3).map((article) => <article className="news-card" key={article.title}><button className={`news-card__art news-card__art--${article.art}`} onClick={() => setActiveArticle(article)} aria-label={`Read: ${article.title}`}>{article.art === 'chip' && <Cpu size={80} strokeWidth={.7} />}{article.art === 'network' && <><Globe2 size={92} strokeWidth={.65} /><span className="network-dot network-dot--one" /><span className="network-dot network-dot--two" /></>}{article.art === 'building' && <><div className="building-shape" /><Leaf size={56} strokeWidth={.9} /></>}</button><div className="news-card__body"><div className="news-card__meta"><span>{article.type}</span><time>{article.date}</time></div><h3>{article.title}</h3><button className="text-link" onClick={() => setActiveArticle(article)}>Read the story <ArrowUpRight size={16} /></button></div></article>)}</div></div>
         </section>
 
         <section className="cta-section" id="contact"><div className="cta-section__grid" /><div className="container cta-section__inner"><div><span className="eyebrow">YOUR NEXT STARTS HERE</span><h2>Let’s build what’s next.</h2></div><div><p>Bring us your hardest problem. We’ll bring the compute to solve it.</p><button className="button button--light" onClick={() => setContactOpen(true)}>Talk to an engineer <ArrowRight size={18} /></button></div></div></section>
       </main> : route === '/support/downloads' ? <DriversPage /> : route === '/store' ? <StorePage /> : route === '/login' ? <LoginPage /> : route === '/account' ? (user ? <AccountPage user={user} onUserChange={setUser} /> : <LoginPage />) : route.startsWith('/checkout/') ? <CheckoutPage productId={route.slice('/checkout/'.length)} user={user} /> : route.startsWith('/order/success/') ? <OrderResultPage orderId={route.slice('/order/success/'.length)} /> : route.startsWith('/order/cancelled/') ? <OrderResultPage orderId={route.slice('/order/cancelled/'.length)} cancelled /> : route === '/legal' || legalDocuments[route] ? <LegalPage route={route} onCookieSettings={() => setCookieSettingsOpen(true)} /> : <DetailPage page={getPage(route)} onContact={() => setContactOpen(true)} news={news} onArticle={setActiveArticle} />}
 
       <footer className="site-footer">
-        <div className="container footer__top"><div className="footer__brand"><Brand light /><p>High-performance computing.<br />Human-sized possibilities.</p><address className="footer__address">Harbin, China<br />Street: ???</address><div className="footer__social"><a href="https://www.linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn"><Linkedin size={19} /></a><a href="https://www.youtube.com" target="_blank" rel="noreferrer" aria-label="YouTube"><Youtube size={20} /></a><a href="https://github.com/mindpick" target="_blank" rel="noreferrer" aria-label="GitHub"><Github size={19} /></a><a href="https://t.me/mindpick" target="_blank" rel="noreferrer" aria-label="Telegram"><Send size={19} /></a><a href="https://discord.gg/mindpick" target="_blank" rel="noreferrer" aria-label="Discord"><MessageSquare size={19} /></a></div></div><div className="footer__links"><div><h3>Products</h3><a href="/products/fpu-apollon-1100">FPU Apollon 1100 Processors</a><a href="/products/fpu-1100">FPU 1100 AI</a><a href="/systems/flowsystem-r-1100">FlowSystem R Systems</a><a href="/resources/developer-hub">Software</a></div><div><h3>Solutions</h3><a href="/solutions/ai">Artificial Intelligence</a><a href="/solutions/cloud">Cloud Computing</a><a href="/solutions/hpc">HPC & Research</a><a href="/solutions/data-analytics">Data Analytics</a></div><div><h3>Company</h3><a href="/company/about">About Us</a><a href="/company/newsroom">Newsroom</a><a href="/company/careers">Careers</a><button onClick={() => setContactOpen(true)}>Contact</button></div><div><h3>Support</h3><a href="/support">Support Center</a><a href="https://mindpick.github.io/fpu-documentation/" target="_blank" rel="noreferrer">Documentation</a><a href="/partners">Partner Network</a><a href="/support/warranty">Warranty</a></div></div></div>
+        <div className="container footer__top"><div className="footer__brand"><Brand light /><p>High-performance computing.<br />Human-sized possibilities.</p><address className="footer__address">Harbin, China<br />Street: ???</address><div className="footer__social"><a href="https://www.linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn"><Linkedin size={19} /></a><a href="https://www.youtube.com" target="_blank" rel="noreferrer" aria-label="YouTube"><Youtube size={20} /></a><a href="https://github.com/clodlegrade" target="_blank" rel="noreferrer" aria-label="GitHub"><Github size={19} /></a><a href="https://t.me/clodlegrade" target="_blank" rel="noreferrer" aria-label="Telegram"><Send size={19} /></a><a href="https://discord.gg/clodlegrade" target="_blank" rel="noreferrer" aria-label="Discord"><MessageSquare size={19} /></a></div></div><div className="footer__links"><div><h3>Products</h3><a href="/products/fpu-apollon-1100">FPU Apollon 1100 Processors</a><a href="/products/fpu-1100">FPU 1100 AI</a><a href="/systems/flowsystem-r-1100">FlowSystem R Systems</a><a href="/resources/developer-hub">Software</a></div><div><h3>Solutions</h3><a href="/solutions/ai">Artificial Intelligence</a><a href="/solutions/cloud">Cloud Computing</a><a href="/solutions/hpc">HPC & Research</a><a href="/solutions/data-analytics">Data Analytics</a></div><div><h3>Company</h3><a href="/company/about">About Us</a><a href="/company/newsroom">Newsroom</a><a href="/company/careers">Careers</a><button onClick={() => setContactOpen(true)}>Contact</button></div><div><h3>Support</h3><a href="/support">Support Center</a><a href="https://clodlegrade.github.io/fpu-documentation/" target="_blank" rel="noreferrer">Documentation</a><a href="/partners">Partner Network</a><a href="/support/warranty">Warranty</a></div></div></div>
         <div className="container footer__legal"><span>LEGAL & COMPLIANCE</span><a href="/legal/terms">Terms of Use</a><a href="/legal/trademarks">Trademarks</a><a href="/legal/supply-chain">Supply Chain</a><a href="/legal/competition">Fair Competition</a><a href="/legal/terms-of-sale">Terms of Sale</a><a href="/legal/trade-compliance">Trade Compliance</a><a href="/legal">All policies <ArrowUpRight size={12} /></a></div>
-        <div className="container footer__bottom"><span>© 2026 Mindpick, Inc. All rights reserved.</span><div><a href="/legal/privacy">Privacy</a><a href="/legal/terms">Terms of Use</a><button onClick={() => setCookieSettingsOpen(true)}>Cookie Settings</button><a href="/legal/privacy-choices">Privacy Choices</a><a href="/legal/accessibility">Accessibility</a></div><span className="footer__locale"><Globe2 size={15} /> Global / English</span></div>
+        <div className="container footer__bottom"><span>© 2026 Clod Le Grade, Inc. All rights reserved.</span><div><a href="/legal/privacy">Privacy</a><a href="/legal/terms">Terms of Use</a><button onClick={() => setCookieSettingsOpen(true)}>Cookie Settings</button><a href="/legal/privacy-choices">Privacy Choices</a><a href="/legal/accessibility">Accessibility</a></div><span className="footer__locale"><Globe2 size={15} /> Global / English</span></div>
       </footer>
 
       {searchOpen && <SearchModal onClose={() => setSearchOpen(false)} onContact={() => setContactOpen(true)} />}
       {contactOpen && <ContactModal onClose={() => setContactOpen(false)} />}
       {architectureOpen && <ArchitectureModal onClose={() => setArchitectureOpen(false)} />}
-      {activeArticle && <Modal onClose={() => setActiveArticle(null)} label={activeArticle.title} className="article-modal"><div className={`article-modal__art news-card__art--${activeArticle.art}`}><Brand light /></div><div className="article-modal__body"><div className="news-card__meta"><span>{activeArticle.type}</span><time>{activeArticle.date}</time></div><h2>{activeArticle.title}</h2><p>{activeArticle.text}</p><p>At Mindpick, we believe the next generation of computing should be more powerful, more open, and more efficient. This milestone reflects the work of our engineering teams and partners around the world.</p><p>Learn how our latest technologies can help your organization move from ambitious ideas to real-world impact.</p><button className="button button--red" onClick={() => { setActiveArticle(null); setContactOpen(true); }}>Talk to our team <ArrowRight size={17} /></button></div></Modal>}
+      {activeArticle && <Modal onClose={() => setActiveArticle(null)} label={activeArticle.title} className="article-modal"><div className={`article-modal__art news-card__art--${activeArticle.art}`}><Brand light /></div><div className="article-modal__body"><div className="news-card__meta"><span>{activeArticle.type}</span><time>{activeArticle.date}</time></div><h2>{activeArticle.title}</h2><p>{activeArticle.text}</p><p>At Clod Le Grade, we believe the next generation of computing should be more powerful, more open, and more efficient. This milestone reflects the work of our engineering teams and partners around the world.</p><p>Learn how our latest technologies can help your organization move from ambitious ideas to real-world impact.</p><button className="button button--red" onClick={() => { setActiveArticle(null); setContactOpen(true); }}>Talk to our team <ArrowRight size={17} /></button></div></Modal>}
       <CookieManager settingsOpen={cookieSettingsOpen} onOpenSettings={() => setCookieSettingsOpen(true)} onCloseSettings={() => setCookieSettingsOpen(false)} />
       {showTop && <button className="back-to-top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} aria-label="Back to top"><ArrowUp size={19} /></button>}
     </div>

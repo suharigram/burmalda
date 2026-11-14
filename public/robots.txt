@@ -24,4 +24,4 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
-Sitemap: https://mindpick.com/sitemap.xml
+Sitemap: https://clodlegrade.com/sitemap.xml

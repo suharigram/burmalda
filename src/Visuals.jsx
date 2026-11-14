@@ -14,9 +14,9 @@ export function Brand({ light = false }) {
   }, []);
   const inverted = light || theme === 'dark';
   return (
-    <span className={`brand ${light ? 'brand--light' : ''}`} aria-label="Mindpick">
+    <span className={`brand ${light ? 'brand--light' : ''}`} aria-label="Clod Le Grade">
       <img className="brand__mark" src={inverted ? '/logo-white.png' : '/logo.png'} alt="" width="330" height="247" />
-      <span className="brand__word">Mindpick</span>
+      <span className="brand__word">Clod Le Grade</span>
     </span>
   );
 }

@@ -24,7 +24,7 @@ export async function generateMetadata({ params }) {
   const route = routeFromParams(await params);
   const page = pages[route];
   const legalPage = legalDocuments[route];
-  const title = route === '/' ? 'Mindpick — Compute Without Limits'
+  const title = route === '/' ? 'Clod Le Grade — Compute Without Limits'
     : page?.title || legalPage?.title
       || (route === '/legal' ? 'Legal & Compliance'
         : route === '/store' ? 'Store'
@@ -32,10 +32,10 @@ export async function generateMetadata({ params }) {
             : route.startsWith('/order/') ? 'Order Status'
               : route === '/account' ? 'My Account'
                 : route === '/login' ? 'Sign In' : 'Page Not Found');
-  const description = page?.description || legalPage?.summary || 'Mindpick builds high-performance processors, AI accelerators, and rack-scale systems for AI, cloud, HPC, and data analytics.';
+  const description = page?.description || legalPage?.summary || 'Clod Le Grade builds high-performance processors, AI accelerators, and rack-scale systems for AI, cloud, HPC, and data analytics.';
   const noindex = privateRoutes.includes(route) || route.startsWith('/checkout/') || route.startsWith('/order/');
   return {
-    title: route === '/' ? { absolute: 'Mindpick — Compute Without Limits' } : title,
+    title: route === '/' ? { absolute: 'Clod Le Grade — Compute Without Limits' } : title,
     description,
     alternates: { canonical: route },
     robots: { index: !noindex, follow: !noindex },

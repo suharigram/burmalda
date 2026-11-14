@@ -2,21 +2,21 @@ import '../src/styles.css';
 import '../src/kilo.css';
 
 export const metadata = {
-  metadataBase: new URL(process.env.PUBLIC_URL || 'https://mindpick.com'),
+  metadataBase: new URL(process.env.PUBLIC_URL || 'https://clodlegrade.com'),
   title: {
-    default: 'Mindpick — Compute Without Limits',
-    template: '%s | Mindpick',
+    default: 'Clod Le Grade — Compute Without Limits',
+    template: '%s | Clod Le Grade',
   },
-  description: 'Mindpick builds high-performance processors, AI accelerators, and rack-scale systems for AI, cloud, HPC, and data analytics.',
+  description: 'Clod Le Grade builds high-performance processors, AI accelerators, and rack-scale systems for AI, cloud, HPC, and data analytics.',
   icons: {
     icon: '/favicon-64.png',
     apple: '/apple-touch-icon.png',
   },
   openGraph: {
-    title: 'Mindpick — Compute Without Limits',
+    title: 'Clod Le Grade — Compute Without Limits',
     description: 'High-performance processors, AI accelerators, and rack-scale server systems for AI, cloud, HPC, and data analytics.',
     url: '/',
-    siteName: 'Mindpick',
+    siteName: 'Clod Le Grade',
     images: ['/logo.png'],
     type: 'website',
   },
@@ -28,9 +28,9 @@ const themeScript = `try{document.documentElement.dataset.theme=localStorage.get
 const organizationJson = JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'Organization',
-  name: 'Mindpick',
-  url: 'https://mindpick.com/',
-  logo: 'https://mindpick.com/logo.png',
+  name: 'Clod Le Grade',
+  url: 'https://clodlegrade.com/',
+  logo: 'https://clodlegrade.com/logo.png',
   description: 'High-performance processors, AI accelerators, and rack-scale server systems for AI, cloud, HPC, and data analytics.',
 });
 

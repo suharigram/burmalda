@@ -10,7 +10,7 @@ Before accepting payments, configure the local or deployment environment:
 |---|---|
 | `STRIPE_SECRET_KEY` | Your Stripe secret API key. Use `sk_test_...` during development and a live key only for production. |
 | `STRIPE_WEBHOOK_SECRET` | The signing secret for the configured Stripe webhook (`whsec_...`). |
-| `PUBLIC_URL` | The public origin of the site, for example `http://localhost:3000` locally or `https://mindpick.com` in production. |
+| `PUBLIC_URL` | The public origin of the site, for example `http://localhost:3000` locally or `https://clodlegrade.com` in production. |
 | `DATABASE_URL` | The Supabase Session Pooler connection string used to create and update orders. |
 | `PGSSL` | Set to `true` for Supabase TLS connections. |
 

@@ -1,4 +1,4 @@
-# Mindpick
+# Clod Le Grade
 
 Next.js website with serverless API routes for accounts, inquiries, orders, Stripe Checkout, and Supabase PostgreSQL.
 
@@ -47,7 +47,7 @@ The application uses the database password only on the server. Do not expose it 
 | `DATABASE_URL` | Required Supabase Session Pooler connection string. |
 | `PGSSL` | Set to `true` for Supabase TLS connections. |
 | `PG_POOL_MAX` | Optional maximum PostgreSQL connections per serverless instance; defaults to `3`. |
-| `PUBLIC_URL` | Canonical public origin, for example `https://mindpick.com`. Used for metadata, OAuth callbacks, and Stripe return URLs. |
+| `PUBLIC_URL` | Canonical public origin, for example `https://clodlegrade.com`. Used for metadata, OAuth callbacks, and Stripe return URLs. |
 | `SMTP_URL` + `INQUIRY_TO_EMAIL` | Team and customer email delivery. `MAIL_FROM` optionally overrides the sender. |
 | `FORM_WEBHOOK_URL` | Optional additional inquiry delivery to a CRM or automation webhook. |
 | `STRIPE_SECRET_KEY` | Server-only Stripe secret key; use test keys until the payment flow is verified. |
@@ -71,12 +71,12 @@ For preview deployments, either leave `PUBLIC_URL` unset so callbacks use the cu
 
 1. In **Supabase Dashboard → Authentication → Sign In / Providers**, keep Email enabled and enable Google and GitHub. Enter OAuth credentials in Supabase, not in the website environment.
 2. In each provider's OAuth application, set Supabase's callback URL: `https://PROJECT_REF.supabase.co/auth/v1/callback`.
-3. In **Supabase → Authentication → URL Configuration**, set Site URL to `https://mindpick.com` and add these redirect URLs:
+3. In **Supabase → Authentication → URL Configuration**, set Site URL to `https://clodlegrade.com` and add these redirect URLs:
 
 ```text
-https://mindpick.com/api/auth/google/callback
-https://mindpick.com/api/auth/github/callback
-https://mindpick.com/api/auth/confirm
+https://clodlegrade.com/api/auth/google/callback
+https://clodlegrade.com/api/auth/github/callback
+https://clodlegrade.com/api/auth/confirm
 http://localhost:3000/api/auth/google/callback
 http://localhost:3000/api/auth/github/callback
 http://localhost:3000/api/auth/confirm

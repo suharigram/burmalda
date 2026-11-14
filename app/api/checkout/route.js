@@ -20,10 +20,10 @@ export async function POST(request) {
       return json(400, { message: 'Please check the product, quantity, customer details, and required agreements.' });
     }
     if (customer.paymentMethod === 'invoice' && production && !deliveryConfigured()) {
-      return json(503, { message: 'Invoice delivery is not configured. Please contact orders@mindpick.com.' });
+      return json(503, { message: 'Invoice delivery is not configured. Please contact orders@clodlegrade.com.' });
     }
     const orderId = randomUUID();
-    const orderReference = reference('MP-ORD');
+    const orderReference = reference('CLG-ORD');
     const order = {
       orderId, reference: orderReference, productId: item.id, productName: item.name,
       quantity, total: item.unitAmount * quantity, currency: item.currency,

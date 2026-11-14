@@ -11,11 +11,11 @@ export async function POST(request) {
     if (input.website) return json(200, { received: true });
     const inquiry = inquiryPayload(input);
     if (!inquiry) return json(400, { message: 'Please check the required fields and work email.' });
-    if (production && !deliveryConfigured()) return json(503, { message: 'Form delivery is not configured. Please email sales@mindpick.com.' });
-    const requestId = reference('MP');
+    if (production && !deliveryConfigured()) return json(503, { message: 'Form delivery is not configured. Please email sales@clodlegrade.com.' });
+    const requestId = reference('CLG');
     await createSubmission('inquiry', { requestId, ...inquiry });
     await deliver(
-      `Mindpick inquiry ${requestId}`,
+      `Clod Le Grade inquiry ${requestId}`,
       `Reference: ${requestId}\nName: ${inquiry.firstName} ${inquiry.lastName}\nEmail: ${inquiry.email}\nCompany: ${inquiry.company}\nInterest: ${inquiry.interest}\n\n${inquiry.message}`,
       inquiry.email, inquiry.email,
     );
