@@ -9,7 +9,7 @@ export const metadata = {
   },
   description: 'Clod Le Grade builds high-performance processors, AI accelerators, and rack-scale systems for AI, cloud, HPC, and data analytics.',
   icons: {
-    icon: '/favicon-64.png',
+    icon: '/favicon.png',
     apple: '/apple-touch-icon.png',
   },
   openGraph: {
